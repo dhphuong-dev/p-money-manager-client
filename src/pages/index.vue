@@ -1,28 +1,7 @@
-<script setup lang="ts">
-import { useBreakpoints } from '@/composables/useBreakpoints';
-import useCounter from '@/composables/useCounter';
-
-const { width, device } = useBreakpoints();
-const { count, increment, decrement } = useCounter();
-
-onMounted(() => {
-  document.title = 'Vue 3 Boilerplate';
-});
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div class="home">
-    <div>This is Home page</div>
-    <div>Size: {{ width }}</div>
-    <div>Device: {{ device }}</div>
-
-    <div>Count: {{ count }}</div>
-
-    <div>
-      <n-button size="large" type="primary" @click="increment">Increment</n-button>
-      <n-button size="large" @click="decrement" style="margin-left: 2rem">Decrement</n-button>
-    </div>
-  </div>
+  <div class="home">Introduction</div>
 </template>
 
 <style scoped lang="scss">
@@ -36,7 +15,7 @@ onMounted(() => {
 </style>
 
 <route lang="yaml">
-name: Home
+name:
 meta:
   layout: default
 </route>

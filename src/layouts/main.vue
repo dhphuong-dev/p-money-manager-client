@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header />
     <router-view v-slot="{ Component, route }">
       <transition name="slide">
         <div>
@@ -8,6 +7,6 @@
         </div>
       </transition>
     </router-view>
-    <Footer />
+    <p-footer />
   </div>
 </template>

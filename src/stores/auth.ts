@@ -1,25 +1,56 @@
-import { localStorageEnum } from '@enums/authEnum';
-import { login } from '@/api/user.api';
-import type { IUserLogin } from '@/types/user.types';
+import type { APIResponse } from '@/types/response.type';
+import type { ILoginBody, IRegisterBody, UserLoginResponse } from '@/types/auth.types';
+import { localStorageEnum } from '@/constants';
+import { login, register, resetPassword } from '@/api/auth';
 
 interface IAuthState {
-  acccesToken: string | null;
-  redirect?: URL;
+  acccesToken: string;
+  userId: string;
+  returnUrl?: URL;
 }
 
 export const useAuthStore = defineStore('authStore', {
   state: (): IAuthState => {
     return {
-      acccesToken: localStorage.getItem(localStorageEnum.ACCESS_TOKEN) || null
+      acccesToken: localStorage.getItem(localStorageEnum.ACCESS_TOKEN) || '',
+      userId: ''
     };
   },
+  getters: {
+    loggedIn: ({ acccesToken }) => !!acccesToken
+  },
   actions: {
-    async login(userLogin: IUserLogin): Promise<void> {
-      const { data } = await login(userLogin);
-      this.acccesToken = data.data.access_token;
+    setUser(token: string, id: string) {
+      this.userId = id;
+      this.acccesToken = token;
       localStorage.setItem(localStorageEnum.ACCESS_TOKEN, this.acccesToken);
     },
-    logout(): void {
+    clearUser() {
+      this.userId = '';
+      this.acccesToken = '';
+      localStorage.removeItem(localStorageEnum.ACCESS_TOKEN);
+    },
+    async login(user: ILoginBody): Promise<APIResponse<UserLoginResponse>> {
+      try {
+        const { data } = await login(user);
+        this.userId = data.data.id;
+        this.acccesToken = data.data.accessToken;
+        localStorage.setItem(localStorageEnum.ACCESS_TOKEN, this.acccesToken);
+        return Promise.resolve(data);
+      } catch (err: any) {
+        return Promise.reject(err.response.data);
+      }
+    },
+    async register(user: IRegisterBody): Promise<APIResponse<any>> {
+      try {
+        const { data } = await register(user);
+        return Promise.resolve(data);
+      } catch (err: any) {
+        return Promise.reject(err.response.data);
+      }
+    },
+    async logout() {
+      this.userId = '';
       this.acccesToken = '';
       localStorage.removeItem(localStorageEnum.ACCESS_TOKEN);
     }
