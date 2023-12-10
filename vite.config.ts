@@ -51,9 +51,7 @@ export default defineConfig({
       '@axios': fileURLToPath(new URL('./src/api/axios.ts', import.meta.url)),
       '@enums': fileURLToPath(new URL('./src/enums/', import.meta.url)),
       '@styles': fileURLToPath(new URL('./src/styles', import.meta.url)),
-      '@stores': fileURLToPath(new URL('./src/stores/', import.meta.url)),
-      '@plugins': fileURLToPath(new URL('./src/plugins', import.meta.url)),
-      '@directives': fileURLToPath(new URL('./src/directives', import.meta.url))
+      '@stores': fileURLToPath(new URL('./src/stores/', import.meta.url))
     }
   },
   build: {

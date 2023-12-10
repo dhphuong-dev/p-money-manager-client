@@ -3,8 +3,9 @@ FROM node:16-alpine AS builder
 WORKDIR /app
 COPY package.json .
 COPY . .
-RUN npm install
-RUN npm run build
+RUN npm install yarn
+RUN yarn
+RUN yarn build
 
 FROM nginx:1.21.0-alpine as production
 RUN touch /var/run/nginx.pid && \

@@ -15,7 +15,7 @@ router.beforeEach(async (from, to, next) => {
 });
 
 router.afterEach((to) => {
-  const defaultDocumentTitle = 'Vue 3 Boilerplate';
+  const defaultDocumentTitle = 'pMoney Manager';
   if (to.name) {
     document.title = `${String(to.name)} - ${defaultDocumentTitle}`;
   } else {

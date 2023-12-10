@@ -1,4 +1,4 @@
-import { localStorageEnum } from '@enums/index';
+import { localStorageEnum } from '@/constants';
 
 interface ISetting {
   darkMode: boolean;

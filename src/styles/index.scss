@@ -1,12 +1,7 @@
-@import 'base';
 @import 'mixins';
 @import 'utils';
 @import 'normalize';
 @import 'fonts';
-
-body {
-  font-size: 2.4rem;
-}
 
 .container,
 .container-fluid {

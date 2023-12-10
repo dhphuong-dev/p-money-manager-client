@@ -1,10 +1,10 @@
 <template>
   <n-config-provider :theme-overrides="themeOverrides" :theme="theme">
-    <n-dialog-provider>
-      <n-message-provider>
+    <n-message-provider :max="1">
+      <n-loading-bar-provider>
         <router-view></router-view>
-      </n-message-provider>
-    </n-dialog-provider>
+      </n-loading-bar-provider>
+    </n-message-provider>
   </n-config-provider>
 </template>
 
@@ -14,22 +14,27 @@ import { darkTheme, lightTheme } from 'naive-ui';
 import { useSettingStore } from '@/stores/setting';
 const themeOverrides: GlobalThemeOverrides = {
   common: {
-    primaryColor: '#EF7C45FF',
-    primaryColorHover: '#f37335'
+    primaryColor: '#0012ff',
+    baseColor: '#0012ff',
+    textColorBase: '#363853'
+  },
+  Form: {
+    labelTextColor: '#9e9e9f',
+    labelPaddingVertical: '1rem 0',
+    labelFontWeight: 'bold'
+  },
+  Input: {
+    border: 'none',
+    borderRadius: '8px',
+    placeholderColor: '#363853'
   },
   Button: {
-    border: '1px solid #F47B2A',
-    borderPressed: '1px solid #F47B2A',
-    textColorPressed: '#F47B2A',
-    colorPrimary: '#F47B2A',
-    textColorPrimary: 'white',
-    colorFocusPrimary: '#f47b2a',
-    textColorFocusPrimary: 'white',
-    colorHoverPrimary: 'white',
-    textColorHoverPrimary: '#f47b2a',
-    colorPressedPrimary: '#f47b2a',
-    borderPressedPrimary: '1px solid #F47B2A',
-    textColorPressedPrimary: 'white'
+    color: '#0012ff',
+    colorFocus: '#0012ff',
+    colorHover: '#0012ff',
+    colorPressed: '#0012ff',
+    textColorHover: 'none',
+    textColorPressed: 'none'
   }
 };
 

@@ -1,4 +1,4 @@
-import { localStorageEnum } from '../enums/authEnum';
+import { localStorageEnum } from '../constants/auth.enum';
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 
 export const auth = async (
