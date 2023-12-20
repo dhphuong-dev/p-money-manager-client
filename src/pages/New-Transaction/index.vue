@@ -1,9 +1,9 @@
 <template>
-  <div>Report</div>
+  <div>New Transaction</div>
 </template>
 
 <route lang="yaml">
-name: Report
+name: New Transacion
 meta:
   requiresAuth: true
   layout: main
