@@ -1,4 +1,5 @@
 import { api } from '../axios';
+import type { PageMeta } from '@/types/PageMeta.types';
 import type { TransactionResponse, TransactionRequest } from '@/types/transaction.type';
 import type { APIResponse } from '@/types/response.type';
 import { UrlConstants } from '@/constants';
@@ -24,7 +25,15 @@ const transaction = () => ({
       transaction.image.length > 0 &&
       formData.append('image', transaction.image[0].file as File);
     return api.post<APIResponse<TransactionResponse>>(UrlConstants.TRANSACTION, formData, config);
+  },
+  async getMyTransactions() {
+    return api.get<APIResponse<{ meta: PageMeta; items: TransactionResponse[] }>>(
+      UrlConstants.TRANSACTION + '/me'
+    );
+  },
+  async getTransactionById(id: string) {
+    return api.get<APIResponse<TransactionResponse>>(UrlConstants.TRANSACTION, { params: { id } });
   }
 });
 
-export const { createNewTransaction } = transaction();
+export const { createNewTransaction, getMyTransactions, getTransactionById } = transaction();

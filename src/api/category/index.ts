@@ -4,8 +4,11 @@ import type { CategoryResponse, CategoryRequest } from '@/types/category.type';
 import { UrlConstants } from '@/constants';
 
 const category = () => ({
-  async getCategory() {
-    return api.get<APIResponse<CategoryResponse[]>>(UrlConstants.CATEGORY);
+  async getMyCategories() {
+    return api.get<APIResponse<CategoryResponse[]>>(UrlConstants.CATEGORY + '/me');
+  },
+  async getCategoryById(id: string) {
+    return api.get<APIResponse<CategoryResponse>>(UrlConstants.CATEGORY, { params: { id } });
   },
   async createNewCategory(category: CategoryRequest) {
     const config = {
@@ -23,4 +26,4 @@ const category = () => ({
   }
 });
 
-export const { createNewCategory, getCategory } = category();
+export const { createNewCategory, getMyCategories, getCategoryById } = category();

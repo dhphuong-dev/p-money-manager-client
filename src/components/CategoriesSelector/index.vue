@@ -2,7 +2,7 @@
 import { AxiosError } from 'axios';
 import { IconPlus } from '@tabler/icons-vue';
 
-import { getCategory } from '@/api/category';
+import { getMyCategories } from '@/api/category';
 import { CategoryType, type CategoryResponse } from '@/types/category.type';
 import { getRandomColor } from '@/utils/random';
 
@@ -55,7 +55,7 @@ const reloadComponent = async (_show: boolean) => {
   showNewCategory.value = _show;
   loadingBar.start();
   try {
-    const { data } = await getCategory();
+    const { data } = await getMyCategories();
     categories.value = data.data;
   } catch (err) {
     console.error(err);

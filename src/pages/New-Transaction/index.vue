@@ -14,12 +14,12 @@ import type { WalletResponse } from '@/types/wallet.type';
 import type { CategoryResponse } from '@/types/category.type';
 import type { TransactionRequest } from '@/types/transaction.type';
 
-import { getWallet } from '@/api/wallet';
-import { getCategory } from '@/api/category';
+import { getMyWallet } from '@/api/wallet';
+import { getMyCategories } from '@/api/category';
 import { createNewTransaction } from '@/api/transaction';
 
 import { isNumber } from '@/utils/is';
-import { dateFormat } from '@/utils/format';
+import { dateFormat } from '@/utils/DateFormat';
 
 const router = useRouter();
 const loadingBar = useLoadingBar();
@@ -36,7 +36,7 @@ const formRef = ref<FormInst | null>(null);
 const formValue = reactive<TransactionRequest>({
   name: '',
   total: NaN,
-  date: dateFormat(timestamp.value),
+  date: dateFormat(timestamp.value, 'yyyy-mm-dd'),
   categoryId: '',
   walletId: ''
 });
@@ -87,7 +87,7 @@ const rules: FormRules = {
 
 onBeforeMount(async () => {
   try {
-    const walletResponse = await getWallet();
+    const walletResponse = await getMyWallet();
     walletResponse.data.data.forEach((wallet: WalletResponse) => {
       walletOptions.value.push({
         label: `${wallet.name}: $${wallet.total}`,
@@ -96,7 +96,7 @@ onBeforeMount(async () => {
     });
     formValue.walletId = walletOptions.value[0].value as string;
 
-    const { data } = await getCategory();
+    const { data } = await getMyCategories();
     categoryOptions.value = data.data;
   } catch (err: any) {
     console.log(err);

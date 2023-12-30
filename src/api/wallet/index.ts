@@ -4,9 +4,12 @@ import type { WalletResponse } from '@/types/wallet.type';
 import { UrlConstants } from '@/constants';
 
 const wallet = () => ({
-  async getWallet() {
-    return api.get<APIResponse<WalletResponse[]>>(UrlConstants.WALLET);
+  async getMyWallet() {
+    return api.get<APIResponse<WalletResponse[]>>(UrlConstants.WALLET + '/me');
+  },
+  async getWalletById(id: string) {
+    return api.get<APIResponse<WalletResponse>>(UrlConstants.WALLET, { params: { id } });
   }
 });
 
-export const { getWallet } = wallet();
+export const { getMyWallet, getWalletById } = wallet();

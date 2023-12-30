@@ -10,7 +10,7 @@ import { IconPlus, IconCategory2, IconChartPie, IconWallet, IconUser } from '@ta
           <icon-category2 stroke-width="2" />
         </n-icon>
       </router-link>
-      <router-link :to="{ name: 'Report', params: {} }">
+      <router-link :to="{ name: 'Transaction', params: {} }">
         <n-icon>
           <icon-chart-pie stroke-width="2" />
         </n-icon>
