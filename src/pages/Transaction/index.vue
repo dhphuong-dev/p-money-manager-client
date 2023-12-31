@@ -5,7 +5,7 @@ import { getMyTransactions } from '@/api/transaction';
 import type { TransactionResponse } from '@/types/transaction.type';
 
 const loadingBar = useLoadingBar();
-const messageDialog = useMessage();
+const message = useMessage();
 
 const transactions = ref<TransactionResponse[]>([]);
 
@@ -20,7 +20,11 @@ onBeforeMount(async () => {
       };
     });
   } catch (err: any) {
-    messageDialog.error(err.message);
+    if (!!err.response) {
+      message.error(err.response.data.message);
+    } else {
+      message.error(err.message);
+    }
     loadingBar.error();
   }
   loadingBar.finish();

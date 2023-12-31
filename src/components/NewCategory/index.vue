@@ -55,10 +55,12 @@ const addNewCategoryHandler = async () => {
         message.success('Create new category is successful');
         _show.value = false;
       } catch (err: any) {
-        console.error(err);
-        if (err instanceof AxiosError) {
-          message.error(err.response?.data.message);
+        if (!!err.response) {
+          message.error(err.response.data.message);
+        } else {
+          message.error(err.message);
         }
+        loadingBar.error();
       } finally {
         formValue.value = {
           name: '',

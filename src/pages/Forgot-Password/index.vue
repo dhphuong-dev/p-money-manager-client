@@ -29,8 +29,12 @@ const loginHandler = async () => {
         const { data } = await resetPassword(model.value.email);
         message.success(data.data.message);
         router.push({ name: 'Login', params: {} });
-      } catch (error: any) {
-        message.error(error.message);
+      } catch (err: any) {
+        if (!!err.response) {
+          message.error(err.response.data.message);
+        } else {
+          message.error(err.message);
+        }
         loadingBar.error();
       } finally {
         loading.value = false;

@@ -2,6 +2,9 @@
 import { getCategoryById } from '@/api/category';
 import { getRandomColor } from '@/utils/random';
 import { dateFormat } from '@/utils/DateFormat';
+
+const message = useMessage();
+
 const props = defineProps<{
   transaction: {
     image: string | null;
@@ -17,7 +20,13 @@ onBeforeMount(async () => {
   try {
     const { data } = await getCategoryById(props.transaction.categoryId);
     categoryName.value = data.data.name;
-  } catch (err) {}
+  } catch (err: any) {
+    if (!!err.response) {
+      message.error(err.response.data.message);
+    } else {
+      message.error(err.message);
+    }
+  }
 });
 </script>
 

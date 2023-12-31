@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-const value = ref<string>('');
 
+const value = ref<string>('');
 const options = computed(() => {
-  return ['@gmail.com'].map((suffix) => {
+  return ['@gmail.com', '@email.com'].map((suffix) => {
     const prefix = value.value.split('@')[0];
     return {
       label: prefix + suffix,

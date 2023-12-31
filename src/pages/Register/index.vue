@@ -52,8 +52,12 @@ const registerHandler = () => {
         await login({ email: model.value.email, password: model.value.password });
         router.push({ name: 'Home', params: {} });
         message.success('Register succesful');
-      } catch (error: any) {
-        message.error(error?.message);
+      } catch (err: any) {
+        if (!!err.response) {
+          message.error(err.response.data.message);
+        } else {
+          message.error(err.message);
+        }
         loadingBar.error();
       } finally {
         loading.value = false;

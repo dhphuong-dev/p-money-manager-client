@@ -27,16 +27,6 @@ const rules = {
   }
 };
 
-const options = computed(() => {
-  return ['@gmail.com'].map((suffix) => {
-    const prefix = model.value.email.split('@')[0];
-    return {
-      label: prefix + suffix,
-      value: prefix + suffix
-    };
-  });
-});
-
 const loginHandler = async () => {
   formInstRef.value?.validate(async (errors) => {
     if (!errors) {
@@ -46,8 +36,12 @@ const loginHandler = async () => {
         await login(model.value);
         message.success('Login succesful');
         router.push({ name: 'Home', params: {} });
-      } catch (error: any) {
-        message.error(error?.message);
+      } catch (err: any) {
+        if (!!err.response) {
+          message.error(err.response.data.message);
+        } else {
+          message.error(err.message);
+        }
         loadingBar.error();
       } finally {
         loading.value = false;

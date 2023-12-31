@@ -19,7 +19,7 @@ import { dateFormat } from '@/utils/DateFormat';
 
 const route = useRoute();
 const loadingBar = useLoadingBar();
-const messageDialog = useMessage();
+const message = useMessage();
 
 const transaction = ref<TransactionResponse>();
 const category = ref<CategoryResponse>();
@@ -37,7 +37,11 @@ onBeforeMount(async () => {
     const walletResponse = await getWalletById(transaction.value.walletId);
     wallet.value = walletResponse.data.data;
   } catch (err: any) {
-    messageDialog.error(err.message);
+    if (!!err.response) {
+      message.error(err.response.data.message);
+    } else {
+      message.error(err.message);
+    }
     loadingBar.error();
   }
   loadingBar.finish();
