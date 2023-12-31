@@ -57,10 +57,11 @@ const reloadComponent = async (_show: boolean) => {
   try {
     const { data } = await getMyCategories();
     categories.value = data.data;
-  } catch (err) {
-    console.error(err);
-    if (err instanceof AxiosError) {
-      message.error(err.response?.data.message);
+  } catch (err: any) {
+    if (!!err.response) {
+      message.error(err.response.data.message);
+    } else {
+      message.error(err.message);
     }
   }
   loadingBar.finish();
