@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {
-  IconChevronLeft,
+  IconX,
+  IconTrash,
+  IconPencil,
   IconNotes,
   IconCalendarEvent,
   IconWallet,
@@ -8,33 +10,51 @@ import {
   IconUsers
 } from '@tabler/icons-vue';
 
-import type { TransactionResponse } from '@/types/transaction.type';
+import type { TransactionRequest, TransactionResponse } from '@/types/transaction.type';
 import type { CategoryResponse } from '@/types/category.type';
 import type { WalletResponse } from '@/types/wallet.type';
-import { getTransactionById } from '@/api/transaction';
+import { getTransactionById, deleteTransactionById, editTransactionById } from '@/api/transaction';
 import { getCategoryById } from '@/api/category';
 import { getWalletById } from '@/api/wallet';
 
 import { dateFormat } from '@/utils/DateFormat';
 
+const router = useRouter();
 const route = useRoute();
 const loadingBar = useLoadingBar();
 const message = useMessage();
+const dialog = useDialog();
 
 const transaction = ref<TransactionResponse>();
 const category = ref<CategoryResponse>();
 const wallet = ref<WalletResponse>();
+
+const isEdit = ref<boolean>(false);
+const transactionFormRef = ref<any>(null);
+const transactionEdit = ref<TransactionRequest>({
+  name: '',
+  total: NaN,
+  date: dateFormat(Date.now(), 'yyyy-mm-dd'),
+  walletId: '',
+  categoryId: ''
+});
 
 onBeforeMount(async () => {
   loadingBar.start();
   try {
     const transactionResponse = await getTransactionById(route.params.id as string);
     transaction.value = transactionResponse.data.data;
+    transactionEdit.value = {
+      ...transaction.value,
+      location: transaction.value.location!,
+      withPerson: transaction.value.withPerson!
+    };
 
-    const categoryResponse = await getCategoryById(transaction.value.categoryId);
+    const [categoryResponse, walletResponse] = await Promise.all([
+      getCategoryById(transaction.value.categoryId),
+      getWalletById(transaction.value.walletId)
+    ]);
     category.value = categoryResponse.data.data;
-
-    const walletResponse = await getWalletById(transaction.value.walletId);
     wallet.value = walletResponse.data.data;
   } catch (err: any) {
     if (!!err.response) {
@@ -47,24 +67,95 @@ onBeforeMount(async () => {
   loadingBar.finish();
 });
 
-const editTransaction = () => {};
+const editTransaction = () => {
+  transactionFormRef.value.formRef.validate(async (errors) => {
+    if (!errors) {
+      loadingBar.start();
+      try {
+        await editTransactionById(transaction.value?.id!, transactionEdit.value);
+        message.success('Edit transaction successful');
+        setTimeout(() => {
+          isEdit.value = false;
+        }, 500);
+        location.reload();
+      } catch (err: any) {
+        if (!!err.response) {
+          message.error(err.response.data.message);
+        } else {
+          message.error(err.message);
+        }
+        loadingBar.error();
+      } finally {
+        loadingBar.finish();
+      }
+    }
+  });
+};
+
+const deleteTransaction = () => {
+  const d = dialog.error({
+    title: 'Delete this transaction?',
+    negativeText: 'NO',
+    positiveText: 'YES',
+    positiveButtonProps: {
+      color: '#ffffff',
+      textColor: '#0012ff',
+      size: 'large',
+      themeOverrides: {
+        fontSizeLarge: '16px',
+        fontWeight: 'bold'
+      }
+    },
+    negativeButtonProps: {
+      color: '#ffffff',
+      textColor: '#0012ff',
+      size: 'large',
+      themeOverrides: {
+        fontSizeLarge: '16px',
+        fontWeight: 'bold'
+      }
+    },
+    onPositiveClick: async () => {
+      d.loading = true;
+      try {
+        const { data } = await deleteTransactionById(transaction.value?.id!);
+        message.success(data.data.message);
+        router.push({ name: 'Transaction' });
+      } catch (err: any) {
+        if (!!err.response) {
+          message.error(err.response.data.message);
+        } else {
+          message.error(err.message);
+        }
+      }
+      d.loading = false;
+    }
+  });
+};
 </script>
 
 <template>
-  <div>
-    <p-header title="Transaction" class="container">
+  <div v-if="!!transaction && !!category && !!wallet">
+    <p-header class="container">
       <template #back>
-        <n-icon :size="24" style="display: block" @click="$router.back">
-          <icon-chevron-left />
+        <n-icon :size="24" style="display: block" @click="router.back">
+          <icon-x />
         </n-icon>
       </template>
 
       <template #function>
-        <p class="add" @click="editTransaction">Edit</p>
+        <n-space>
+          <n-icon :size="24" style="display: block" @click="isEdit = true">
+            <icon-pencil />
+          </n-icon>
+          <n-icon :size="24" style="display: block" @click="deleteTransaction">
+            <icon-trash />
+          </n-icon>
+        </n-space>
       </template>
     </p-header>
 
-    <div class="transaction" v-if="!!transaction && !!category && !!wallet">
+    <div id="transaction-details">
       <div class="section" v-if="!!transaction.imageUrl">
         <div class="transaction-img">
           <n-image :src="transaction.imageUrl" />
@@ -78,7 +169,7 @@ const editTransaction = () => {};
           <div class="">
             <p>Total</p>
             <p class="total" :class="{ negative: transaction.total < 0 }">
-              {{ transaction.total > 0 ? transaction.total : -transaction.total }}
+              {{ transaction.total }}
             </p>
           </div>
         </div>
@@ -110,7 +201,7 @@ const editTransaction = () => {};
               <icon-wallet />
             </n-icon>
           </div>
-          <p>{{ wallet.name }}</p>
+          <p>{{ `${wallet.name}: $${wallet.total}` }}</p>
         </div>
       </div>
       <div class="section" v-if="!!transaction.location || !!transaction.withPerson">
@@ -132,11 +223,27 @@ const editTransaction = () => {};
         </div>
       </div>
     </div>
+
+    <n-drawer :show="isEdit" placement="bottom" height="100%" class="edit-transaction">
+      <p-header class="container" title="Edit transaction">
+        <template #back>
+          <n-icon :size="24" style="display: block" @click="isEdit = false">
+            <icon-x />
+          </n-icon>
+        </template>
+      </p-header>
+
+      <transaction-form ref="transactionFormRef" v-model:transaction="transactionEdit" />
+
+      <div class="container" style="margin-bottom: 4rem">
+        <p-button @click="editTransaction">Save</p-button>
+      </div>
+    </n-drawer>
   </div>
 </template>
 
-<style scoped lang="scss">
-.transaction {
+<style lang="scss">
+#transaction-details {
   .section {
     background-color: #ffffff;
     padding: 2rem;
@@ -184,6 +291,9 @@ const editTransaction = () => {};
       object-fit: cover;
     }
   }
+}
+.edit-transaction {
+  background-color: $bg-primary;
 }
 </style>
 

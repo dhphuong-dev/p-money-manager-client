@@ -2,7 +2,9 @@
   <n-config-provider :theme-overrides="themeOverrides" :theme="theme">
     <n-message-provider :max="1">
       <n-loading-bar-provider>
-        <router-view></router-view>
+        <n-dialog-provider>
+          <router-view></router-view>
+        </n-dialog-provider>
       </n-loading-bar-provider>
     </n-message-provider>
   </n-config-provider>

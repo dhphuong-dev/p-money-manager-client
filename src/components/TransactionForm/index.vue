@@ -8,28 +8,14 @@ import {
   IconUsers,
   IconCamera
 } from '@tabler/icons-vue';
-
 import type { SelectOption, FormRules, FormInst, UploadFileInfo } from 'naive-ui';
+
 import type { WalletResponse } from '@/types/wallet.type';
 import type { CategoryResponse } from '@/types/category.type';
 import type { TransactionRequest } from '@/types/transaction.type';
-
 import { getMyWallet } from '@/api/wallet';
-import { getMyCategories } from '@/api/category';
-
+import { getMyCategories, getCategoryById } from '@/api/category';
 import { isNumber } from '@/utils/is';
-
-const router = useRouter();
-const loadingBar = useLoadingBar();
-const message = useMessage();
-
-const isMoreDetails = ref<boolean>(false);
-const isShowCategoriesSelector = ref<boolean>(false);
-const selectedCategory = ref<CategoryResponse | undefined>();
-const categoryOptions = ref<CategoryResponse[]>([]);
-const timestamp = ref<number>(Date.now());
-const walletOptions = ref<SelectOption[]>([]);
-const previewImg = ref<string | undefined>();
 
 const props = defineProps<{
   transaction: TransactionRequest;
@@ -37,10 +23,20 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:transaction', transaction: TransactionRequest): void;
 }>();
+const loadingBar = useLoadingBar();
+const message = useMessage();
+
+const isMoreDetails = ref<boolean>(false);
+const isShowCategoriesSelector = ref<boolean>(false);
+const selectedCategory = ref<CategoryResponse>();
+const categoryOptions = ref<CategoryResponse[]>([]);
+const timestamp = ref<number>(Date.now());
+const walletOptions = ref<SelectOption[]>([]);
+const previewImg = ref<string | undefined>();
 
 const formRef = ref<FormInst | null>(null);
 const formValue = reactive<TransactionRequest>(props.transaction);
-
+formValue.total = formValue.total > 0 ? formValue.total : -formValue.total;
 const rules: FormRules = {
   name: {
     required: true,
@@ -86,20 +82,35 @@ const rules: FormRules = {
   }
 };
 
+watch(
+  () => selectedCategory.value,
+  () => {
+    formValue.categoryId = selectedCategory.value?.id!;
+  }
+);
+
 onBeforeMount(async () => {
   loadingBar.start();
   try {
-    const walletResponse = await getMyWallet();
+    const [walletResponse, categoriesResponse] = await Promise.all([
+      getMyWallet(),
+      getMyCategories()
+    ]);
     walletResponse.data.data.forEach((wallet: WalletResponse) => {
       walletOptions.value.push({
         label: `${wallet.name}: $${wallet.total}`,
         value: wallet.id
       });
     });
-    formValue.walletId = walletOptions.value[0].value as string;
-
-    const categoriesResponse = await getMyCategories();
     categoryOptions.value = categoriesResponse.data.data;
+
+    if (!formValue.walletId) {
+      formValue.walletId = walletOptions.value[0].value as string;
+    }
+    if (!!formValue.categoryId) {
+      const { data } = await getCategoryById(formValue.categoryId);
+      selectedCategory.value = data.data;
+    }
   } catch (err: any) {
     if (!!err.response) {
       message.error(err.response.data.message);
@@ -109,10 +120,6 @@ onBeforeMount(async () => {
     loadingBar.error();
   }
   loadingBar.finish();
-});
-
-watchEffect(() => {
-  formValue.categoryId = selectedCategory.value?.id || '';
 });
 
 const previewTransactionImage = ({
@@ -134,7 +141,7 @@ defineExpose({
 </script>
 
 <template>
-  <n-form id="transaction-input" :rules="rules" :model="formValue" ref="formRef">
+  <n-form id="transaction-form" :rules="rules" :model="formValue" ref="formRef">
     <div class="wrapper">
       <n-form-item :show-label="false" path="total">
         <div class="form-item">
@@ -328,7 +335,7 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
-#transaction-input {
+#transaction-form {
   .wrapper {
     background-color: white;
     margin: 0 auto;
@@ -340,7 +347,7 @@ defineExpose({
       align-items: center;
       width: 100%;
       .label {
-        width: 4.5rem;
+        width: 5rem;
         text-align: right;
       }
       .input-wrapper {
@@ -372,21 +379,22 @@ defineExpose({
         }
       }
     }
+  }
+  .usd {
+    border: 2px solid black;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
 
-    .usd {
-      border: 2px solid black;
-      border-radius: 5px;
-      padding: 0 0.4rem;
-      font-weight: bold;
-    }
-
-    .more-details {
-      background-color: #fff;
-      color: $primary;
-      font-weight: bold;
-      width: 100%;
-      text-align: center;
-    }
+  .more-details {
+    background-color: #fff;
+    color: $primary;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
   }
 
   .upload-photo {
