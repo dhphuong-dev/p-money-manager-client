@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { IconPlus, IconCategory2, IconChartPie, IconWallet, IconUser } from '@tabler/icons-vue';
+import { IconPlus, IconHome2, IconChartPie, IconWallet, IconUser } from '@tabler/icons-vue';
 </script>
 
 <template>
@@ -7,7 +7,7 @@ import { IconPlus, IconCategory2, IconChartPie, IconWallet, IconUser } from '@ta
     <div class="flex">
       <router-link :to="{ name: 'Home', params: {} }">
         <n-icon>
-          <icon-category2 stroke-width="2" />
+          <icon-home-2 stroke-width="2" />
         </n-icon>
       </router-link>
       <router-link :to="{ name: 'Transaction', params: {} }">
