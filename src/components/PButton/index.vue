@@ -11,6 +11,7 @@ import { NButton } from 'naive-ui';
     text-color="white"
     :builtin-theme-overrides="{
       borderRadiusLarge: '5px',
+      fontSizeLarge: '18px',
       fontWeight: 'bold',
       paddingLarge: '2rem 0'
     }"
@@ -19,5 +20,3 @@ import { NButton } from 'naive-ui';
     <slot></slot>
   </n-button>
 </template>
-
-<style scoped lang="scss"></style>

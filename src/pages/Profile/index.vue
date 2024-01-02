@@ -20,7 +20,7 @@ const { logout } = useAuthStore();
 
 const navigates = [
   {
-    route: 'Home',
+    route: 'Wallet',
     name: 'My Wallets',
     icon: IconWallet
   },
