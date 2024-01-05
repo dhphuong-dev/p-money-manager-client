@@ -2,7 +2,7 @@
 
 <template>
   <div class="home">Introduction</div>
-  <p-button @click="$router.push('home')">Home</p-button>
+  <p-button @click="$router.push('/home')">Home</p-button>
 </template>
 
 <style scoped lang="scss">

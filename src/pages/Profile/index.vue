@@ -25,7 +25,7 @@ const navigates = [
     icon: IconWallet
   },
   {
-    route: 'Home',
+    route: 'Category',
     name: 'Categories',
     icon: IconBoxSeam
   },

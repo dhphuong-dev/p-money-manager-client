@@ -5,21 +5,10 @@ import { getMyCategories } from '@/api/category';
 import { CategoryType, type CategoryResponse } from '@/types/category.type';
 import { getRandomColor } from '@/utils/random';
 
-const props = defineProps<{
-  show: boolean;
-  category: CategoryResponse | undefined;
-  options: CategoryResponse[];
-}>();
-const emit = defineEmits<{
-  (e: 'update:show', show: boolean): void;
-  (e: 'update:category', cate: CategoryResponse): void;
-}>();
-
 const message = useMessage();
 const loadingBar = useLoadingBar();
 
-const _show = ref<boolean>(props.show);
-const categories = ref<CategoryResponse[]>(props.options);
+const categories = ref<CategoryResponse[]>([]);
 const cateTypeSelected = ref<CategoryType>(CategoryType.EXPENSE);
 const categoriesFiltered = computed<CategoryResponse[]>(() =>
   categories.value
@@ -29,25 +18,11 @@ const categoriesFiltered = computed<CategoryResponse[]>(() =>
         new Date(cateB.createdDate).getTime() - new Date(cateA.createdDate).getTime()
     )
 );
-
 const showNewCategory = ref<boolean>(false);
-
-watchEffect(() => {
-  _show.value = props.show;
-});
-
-watchEffect(() => {
-  emit('update:show', _show.value);
-});
 
 const selectCategoryType = (event: Event) => {
   const element = event.target as HTMLElement;
   cateTypeSelected.value = element.getAttribute('data-category-type') as CategoryType;
-};
-
-const selectCategory = (cate: CategoryResponse) => {
-  emit('update:category', cate);
-  _show.value = false;
 };
 
 const reloadComponent = async (_show: boolean) => {
@@ -62,22 +37,23 @@ const reloadComponent = async (_show: boolean) => {
     } else {
       message.error(err.message);
     }
+    loadingBar.error();
   }
   loadingBar.finish();
 };
 </script>
 
 <template>
-  <n-drawer v-model:show="_show" width="100%" class="categories-selector">
-    <p-header class="container" title="Select a Category">
+  <div class="categories container">
+    <p-header title="My Category">
       <template #function>
-        <n-icon :size="28" @click="_show = false">
+        <n-icon :size="28" @click="$router.back()">
           <icon-x />
         </n-icon>
       </template>
     </p-header>
 
-    <div class="container" style="padding-top: 2rem">
+    <div style="padding-top: 2rem">
       <n-grid :cols="2" :x-gap="20">
         <n-grid-item v-for="cateType in CategoryType" :key="cateType">
           <p-card
@@ -99,11 +75,7 @@ const reloadComponent = async (_show: boolean) => {
       </p-card>
 
       <div v-for="cate in categoriesFiltered" :key="cate.id">
-        <p-card
-          class="category"
-          @click="selectCategory(cate)"
-          :class="{ selected: props.category?.id === cate.id }"
-        >
+        <p-card class="category">
           <div class="cat-img">
             <img v-if="!!cate.imageUrl" :src="cate.imageUrl" alt="" />
             <div v-else class="random-color" :style="{ backgroundColor: getRandomColor() }"></div>
@@ -112,13 +84,13 @@ const reloadComponent = async (_show: boolean) => {
         </p-card>
       </div>
     </div>
-  </n-drawer>
+  </div>
 
   <new-category :show="showNewCategory" @update:show="reloadComponent" />
 </template>
 
 <style lang="scss">
-.categories-selector {
+.categories {
   background-color: $bg-primary;
   .category-type {
     font-size: 2rem;
@@ -169,3 +141,9 @@ const reloadComponent = async (_show: boolean) => {
   }
 }
 </style>
+
+<route lang="yaml">
+name: Category
+meta:
+  layout: blank
+</route>
