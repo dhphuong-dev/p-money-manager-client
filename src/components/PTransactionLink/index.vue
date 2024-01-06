@@ -21,7 +21,10 @@ onBeforeMount(async () => {
     <p-card class="transaction">
       <div class="transaction-img">
         <img v-if="transaction.imageUrl" :src="transaction.imageUrl" />
-        <div v-else :style="{ background: getRandomColor() }"></div>
+        <div
+          v-else
+          :style="{ backgroundColor: transaction.total > 0 ? '#67d4ca' : '#f28080' }"
+        ></div>
       </div>
       <div class="transaction-content">
         <n-space class="top" justify="space-between" :wrap="false">

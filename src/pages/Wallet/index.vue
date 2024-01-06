@@ -58,7 +58,7 @@ const walletFunctions = [
         title: `Delete the '${wallet.name}' Wallet?`,
         content:
           'You will also delete all transactios, categories and this action cannot be undone',
-        
+
         negativeText: 'NO',
         positiveText: 'YES',
         positiveButtonProps: {
@@ -99,40 +99,48 @@ const walletFunctions = [
   }
 ];
 
-const addWallet = async () => {
-  loadingBar.start();
-  try {
-    const { data } = await createNewWallet(walletFormValue);
-    message.success('Create a new wallet successful');
-    isAdd.value = false;
-    await loadMyWallets();
-  } catch (err: any) {
-    if (!!err.response) {
-      message.error(err.response.data.message);
-    } else {
-      message.error(err.message);
+const addWallet = () => {
+  formInstRef.value?.validate(async (error) => {
+    if (!error) {
+      loadingBar.start();
+      try {
+        await createNewWallet(walletFormValue);
+        message.success('Create a new wallet successful');
+        isAdd.value = false;
+        await loadMyWallets();
+      } catch (err: any) {
+        if (!!err.response) {
+          message.error(err.response.data.message);
+        } else {
+          message.error(err.message);
+        }
+        loadingBar.error();
+      }
+      loadingBar.finish();
     }
-    loadingBar.error();
-  }
-  loadingBar.finish();
+  });
 };
 
-const editWallet = async () => {
-  loadingBar.start();
-  try {
-    await editWalletName(walletFormValue);
-    message.success('Edit this wallet successful');
-    isEdit.value = false;
-    await loadMyWallets();
-  } catch (err: any) {
-    if (!!err.response) {
-      message.error(err.response.data.message);
-    } else {
-      message.error(err.message);
+const editWallet = () => {
+  formInstRef.value?.validate(async (error) => {
+    if (!error) {
+      loadingBar.start();
+      try {
+        await editWalletName(walletFormValue);
+        message.success('Edit this wallet successful');
+        isEdit.value = false;
+        await loadMyWallets();
+      } catch (err: any) {
+        if (!!err.response) {
+          message.error(err.response.data.message);
+        } else {
+          message.error(err.message);
+        }
+        loadingBar.error();
+      }
+      loadingBar.finish();
     }
-    loadingBar.error();
-  }
-  loadingBar.finish();
+  });
 };
 </script>
 
@@ -214,10 +222,14 @@ const editWallet = async () => {
             />
           </div>
         </n-form-item>
-      </n-form>
 
-      <p-button v-if="isAdd" @click="addWallet">Save</p-button>
-      <p-button v-else @click="editWallet">Save</p-button>
+        <p-button style="margin-top: 2rem" v-if="isAdd" @click="addWallet" attr-type="submit">
+          Save
+        </p-button>
+        <p-button style="margin-top: 2rem" v-else @click="editWallet" attr-type="submit">
+          Save
+        </p-button>
+      </n-form>
     </div>
   </n-drawer>
 </template>

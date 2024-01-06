@@ -2,7 +2,7 @@
 import {
   IconX,
   IconTrash,
-  IconPencil,
+  IconEdit,
   IconNotes,
   IconCalendarEvent,
   IconWallet,
@@ -28,9 +28,7 @@ const dialog = useDialog();
 const transaction = ref<TransactionResponse>();
 const category = ref<CategoryResponse>();
 const wallet = ref<WalletResponse>();
-
 const isEdit = ref<boolean>(false);
-const transactionFormRef = ref<any>(null);
 const transactionEdit = ref<TransactionRequest>({
   name: '',
   total: NaN,
@@ -67,29 +65,25 @@ onBeforeMount(async () => {
   loadingBar.finish();
 });
 
-const editTransaction = () => {
-  transactionFormRef.value.formRef.validate(async (errors) => {
-    if (!errors) {
-      loadingBar.start();
-      try {
-        await editTransactionById(transaction.value?.id!, transactionEdit.value);
-        message.success('Edit transaction successful');
-        setTimeout(() => {
-          isEdit.value = false;
-        }, 500);
-        location.reload();
-      } catch (err: any) {
-        if (!!err.response) {
-          message.error(err.response.data.message);
-        } else {
-          message.error(err.message);
-        }
-        loadingBar.error();
-      } finally {
-        loadingBar.finish();
-      }
+const editTransaction = async (payload: TransactionRequest) => {
+  loadingBar.start();
+  try {
+    await editTransactionById(transaction.value?.id!, payload);
+    message.success('Edit transaction successful');
+    setTimeout(() => {
+      isEdit.value = false;
+    }, 500);
+    location.reload();
+  } catch (err: any) {
+    if (!!err.response) {
+      message.error(err.response.data.message);
+    } else {
+      message.error(err.message);
     }
-  });
+    loadingBar.error();
+  } finally {
+    loadingBar.finish();
+  }
 };
 
 const deleteTransaction = () => {
@@ -146,7 +140,7 @@ const deleteTransaction = () => {
       <template #function>
         <n-space>
           <n-icon :size="24" style="display: block" @click="isEdit = true">
-            <icon-pencil />
+            <icon-edit />
           </n-icon>
           <n-icon :size="24" style="display: block" @click="deleteTransaction">
             <icon-trash />
@@ -226,18 +220,14 @@ const deleteTransaction = () => {
 
     <n-drawer :show="isEdit" placement="bottom" height="100%" class="edit-transaction">
       <p-header class="container" title="Edit transaction">
-        <template #back>
+        <template #function>
           <n-icon :size="24" style="display: block" @click="isEdit = false">
             <icon-x />
           </n-icon>
         </template>
       </p-header>
 
-      <transaction-form ref="transactionFormRef" v-model:transaction="transactionEdit" />
-
-      <div class="container" style="margin-bottom: 4rem">
-        <p-button @click="editTransaction">Save</p-button>
-      </div>
+      <transaction-form :transaction="transactionEdit" @submit="editTransaction" />
     </n-drawer>
   </div>
 </template>

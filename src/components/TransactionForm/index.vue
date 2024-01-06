@@ -16,12 +16,13 @@ import type { TransactionRequest } from '@/types/transaction.type';
 import { getMyWallet } from '@/api/wallet';
 import { getMyCategories, getCategoryById } from '@/api/category';
 import { isNumber } from '@/utils/is';
+import { dateFormat } from '@/utils/DateFormat';
 
 const props = defineProps<{
-  transaction: TransactionRequest;
+  transaction?: TransactionRequest;
 }>();
 const emit = defineEmits<{
-  (e: 'update:transaction', transaction: TransactionRequest): void;
+  (e: 'submit', transaction: TransactionRequest): void;
 }>();
 const loadingBar = useLoadingBar();
 const message = useMessage();
@@ -35,7 +36,15 @@ const walletOptions = ref<SelectOption[]>([]);
 const previewImg = ref<string | undefined>();
 
 const formRef = ref<FormInst | null>(null);
-const formValue = reactive<TransactionRequest>(props.transaction);
+const formValue = reactive<TransactionRequest>(
+  props.transaction || {
+    name: '',
+    total: NaN,
+    date: dateFormat(Date.now(), 'yyyy-mm-dd'),
+    categoryId: '',
+    walletId: ''
+  }
+);
 formValue.total = formValue.total > 0 ? formValue.total : -formValue.total;
 const rules: FormRules = {
   name: {
@@ -135,9 +144,13 @@ const previewTransactionImage = ({
   else previewImg.value = undefined;
 };
 
-defineExpose({
-  formRef
-});
+const saveTransaction = () => {
+  formRef.value?.validate((error) => {
+    if (!error) {
+      emit('submit', formValue);
+    }
+  });
+};
 </script>
 
 <template>
@@ -330,6 +343,10 @@ defineExpose({
           <img :src="previewImg" alt="aaaaa" />
         </div>
       </div>
+    </div>
+
+    <div class="container" style="margin-bottom: 4rem">
+      <p-button @click="saveTransaction" attr-type="submit">Save</p-button>
     </div>
   </n-form>
 </template>
