@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import dayjs from 'dayjs';
+
 import { getCategoryById } from '@/api/category';
-import { getRandomColor } from '@/utils/random';
-import { dateFormat } from '@/utils/DateFormat';
 import type { TransactionResponse } from '@/types/transaction.type';
 const props = defineProps<{
   transaction: TransactionResponse;
@@ -35,7 +35,7 @@ onBeforeMount(async () => {
         </n-space>
         <n-space class="bottom" justify="space-between">
           <p>{{ categoryName }}</p>
-          <p>{{ dateFormat(transaction.date, 'mmm dd') }}</p>
+          <p>{{ dayjs(transaction.date).format('MMM DD') }}</p>
         </n-space>
       </div>
     </p-card>

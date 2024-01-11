@@ -9,6 +9,7 @@ import {
   IconMapPinCheck,
   IconUsers
 } from '@tabler/icons-vue';
+import dayjs from 'dayjs';
 
 import type { TransactionRequest, TransactionResponse } from '@/types/transaction.type';
 import type { CategoryResponse } from '@/types/category.type';
@@ -16,8 +17,6 @@ import type { WalletResponse } from '@/types/wallet.type';
 import { getTransactionById, deleteTransactionById, editTransactionById } from '@/api/transaction';
 import { getCategoryById } from '@/api/category';
 import { getWalletById } from '@/api/wallet';
-
-import { dateFormat } from '@/utils/DateFormat';
 
 const router = useRouter();
 const route = useRoute();
@@ -32,7 +31,7 @@ const isEdit = ref<boolean>(false);
 const transactionEdit = ref<TransactionRequest>({
   name: '',
   total: NaN,
-  date: dateFormat(Date.now(), 'yyyy-mm-dd'),
+  date: dayjs().format('YYYY-MM-DD'),
   walletId: '',
   categoryId: ''
 });
@@ -187,7 +186,9 @@ const deleteTransaction = () => {
               <icon-calendar-event />
             </n-icon>
           </div>
-          <p>{{ dateFormat(transaction.date, 'ddd, dd mmm yyyy') }}</p>
+          <p>
+            {{ dayjs(transaction.date).format('ddd, DD MMM YYYY') }}
+          </p>
         </div>
         <div class="line">
           <div class="label">

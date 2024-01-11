@@ -32,9 +32,7 @@ const transaction = () => {
       );
     },
     async getMyTransactions() {
-      return api.get<APIResponse<{ meta: PageMeta; items: TransactionResponse[] }>>(
-        UrlConstants.TRANSACTION + '/me'
-      );
+      return api.get<APIResponse<TransactionResponse[]>>(UrlConstants.TRANSACTION + '/me');
     },
     async getTransactionById(id: string) {
       return api.get<APIResponse<TransactionResponse>>(UrlConstants.TRANSACTION, {

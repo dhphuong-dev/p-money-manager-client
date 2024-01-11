@@ -9,6 +9,7 @@ import {
   IconCamera
 } from '@tabler/icons-vue';
 import type { SelectOption, FormRules, FormInst, UploadFileInfo } from 'naive-ui';
+import dayjs from 'dayjs';
 
 import type { WalletResponse } from '@/types/wallet.type';
 import type { CategoryResponse } from '@/types/category.type';
@@ -16,7 +17,6 @@ import type { TransactionRequest } from '@/types/transaction.type';
 import { getMyWallet } from '@/api/wallet';
 import { getMyCategories, getCategoryById } from '@/api/category';
 import { isNumber } from '@/utils/is';
-import { dateFormat } from '@/utils/DateFormat';
 
 const props = defineProps<{
   transaction?: TransactionRequest;
@@ -31,7 +31,7 @@ const isMoreDetails = ref<boolean>(false);
 const isShowCategoriesSelector = ref<boolean>(false);
 const selectedCategory = ref<CategoryResponse>();
 const categoryOptions = ref<CategoryResponse[]>([]);
-const timestamp = ref<number>(Date.now());
+const timestamp = ref<number>(dayjs().valueOf());
 const walletOptions = ref<SelectOption[]>([]);
 const previewImg = ref<string | undefined>();
 
@@ -40,7 +40,7 @@ const formValue = reactive<TransactionRequest>(
   props.transaction || {
     name: '',
     total: NaN,
-    date: dateFormat(Date.now(), 'yyyy-mm-dd'),
+    date: dayjs(timestamp.value).format('YYYY-MM-DD'),
     categoryId: '',
     walletId: ''
   }
@@ -95,6 +95,12 @@ watch(
   () => selectedCategory.value,
   () => {
     formValue.categoryId = selectedCategory.value?.id!;
+  }
+);
+watch(
+  () => timestamp.value,
+  () => {
+    formValue.date = dayjs(timestamp.value).format('YYYY-MM-DD');
   }
 );
 
