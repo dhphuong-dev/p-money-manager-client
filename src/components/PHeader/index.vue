@@ -8,10 +8,14 @@ const props = defineProps<{
   <header>
     <n-space align="center" justify="space-between">
       <n-space align="center" justify="space-between">
-        <slot name="back" class="header-back" />
+        <div class="header-back">
+          <slot name="back" />
+        </div>
         <h2>{{ props.title }}</h2>
       </n-space>
-      <slot name="function" class="header-function" />
+      <div class="header-function">
+        <slot name="function" />
+      </div>
     </n-space>
   </header>
 </template>

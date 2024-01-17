@@ -24,14 +24,15 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'submit', transaction: TransactionRequest): void;
 }>();
-const loadingBar = useLoadingBar();
 const message = useMessage();
 
-const isMoreDetails = ref<boolean>(false);
+const isMoreDetails = ref<boolean>(
+  !!props.transaction?.withPerson || !!props.transaction?.location
+);
 const isShowCategoriesSelector = ref<boolean>(false);
 const selectedCategory = ref<CategoryResponse>();
 const categoryOptions = ref<CategoryResponse[]>([]);
-const timestamp = ref<number>(dayjs().valueOf());
+const timestamp = ref<number>(dayjs(props.transaction?.date).valueOf());
 const walletOptions = ref<SelectOption[]>([]);
 const previewImg = ref<string | undefined>();
 
@@ -91,21 +92,14 @@ const rules: FormRules = {
   }
 };
 
-watch(
-  () => selectedCategory.value,
-  () => {
-    formValue.categoryId = selectedCategory.value?.id!;
-  }
-);
-watch(
-  () => timestamp.value,
-  () => {
-    formValue.date = dayjs(timestamp.value).format('YYYY-MM-DD');
-  }
-);
+watch(selectedCategory, () => {
+  formValue.categoryId = selectedCategory.value?.id!;
+});
+watch(timestamp, () => {
+  formValue.date = dayjs(timestamp.value).format('YYYY-MM-DD');
+});
 
 onBeforeMount(async () => {
-  loadingBar.start();
   try {
     const [walletResponse, categoriesResponse] = await Promise.all([
       getMyWallet(),
@@ -132,9 +126,7 @@ onBeforeMount(async () => {
     } else {
       message.error(err.message);
     }
-    loadingBar.error();
   }
-  loadingBar.finish();
 });
 
 const previewTransactionImage = ({

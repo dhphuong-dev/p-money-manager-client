@@ -1,5 +1,13 @@
+<script setup lang="ts">
+import { IconBellFilled } from '@tabler/icons-vue';
+</script>
+
 <template>
-  <div>Home</div>
+  <p-header class="container" title="PMoney Manager">
+    <template #function>
+      <icon-bell-filled />
+    </template>
+  </p-header>
 </template>
 
 <route lang="yaml">

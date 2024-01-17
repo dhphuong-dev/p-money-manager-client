@@ -14,7 +14,6 @@ import type { UserResponse } from '@/types/user.types';
 import { useAuthStore } from '@stores/auth';
 
 const router = useRouter();
-const loadingBar = useLoadingBar();
 const message = useMessage();
 const { logout } = useAuthStore();
 
@@ -43,7 +42,6 @@ const navigates = [
 
 const user = ref<UserResponse>();
 onBeforeMount(async () => {
-  loadingBar.start();
   try {
     const { data } = await getMyAccount();
     user.value = data.data;
@@ -53,10 +51,8 @@ onBeforeMount(async () => {
     } else {
       message.error(err.message);
     }
-    loadingBar.error();
   }
   document.title = `${user.value?.fullName} - pMoney Manager`;
-  loadingBar.finish();
 });
 
 const openSetting = () => {};
@@ -71,7 +67,7 @@ const logoutHandler = () => {
 <template>
   <p-header class="container" title="My Profile">
     <template #function>
-      <n-icon :size="32" @click="openSetting"> <icon-settings /> </n-icon>
+      <n-icon :size="28" @click="openSetting"> <icon-settings /> </n-icon>
     </template>
   </p-header>
 

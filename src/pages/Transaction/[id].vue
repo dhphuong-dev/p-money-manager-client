@@ -37,7 +37,6 @@ const transactionEdit = ref<TransactionRequest>({
 });
 
 onBeforeMount(async () => {
-  loadingBar.start();
   try {
     const transactionResponse = await getTransactionById(route.params.id as string);
     transaction.value = transactionResponse.data.data;
@@ -59,9 +58,7 @@ onBeforeMount(async () => {
     } else {
       message.error(err.message);
     }
-    loadingBar.error();
   }
-  loadingBar.finish();
 });
 
 const editTransaction = async (payload: TransactionRequest) => {
@@ -72,7 +69,7 @@ const editTransaction = async (payload: TransactionRequest) => {
     setTimeout(() => {
       isEdit.value = false;
     }, 500);
-    location.reload();
+    router.back();
   } catch (err: any) {
     if (!!err.response) {
       message.error(err.response.data.message);

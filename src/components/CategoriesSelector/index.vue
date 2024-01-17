@@ -7,7 +7,7 @@ import { getRandomColor } from '@/utils/random';
 
 const props = defineProps<{
   show: boolean;
-  category: CategoryResponse | undefined;
+  category?: CategoryResponse;
   options: CategoryResponse[];
 }>();
 const emit = defineEmits<{
@@ -16,7 +16,6 @@ const emit = defineEmits<{
 }>();
 
 const message = useMessage();
-const loadingBar = useLoadingBar();
 
 const _show = ref<boolean>(props.show);
 const categories = ref<CategoryResponse[]>(props.options);
@@ -29,14 +28,21 @@ const categoriesFiltered = computed<CategoryResponse[]>(() =>
         new Date(cateB.createdDate).getTime() - new Date(cateA.createdDate).getTime()
     )
 );
-
 const showNewCategory = ref<boolean>(false);
 
-watchEffect(() => {
-  _show.value = props.show;
-});
-
-watchEffect(() => {
+watch(
+  () => props.category,
+  () => {
+    cateTypeSelected.value = props.category?.type as CategoryType;
+  }
+);
+watch(
+  () => props.show,
+  () => {
+    _show.value = props.show;
+  }
+);
+watch(_show, () => {
   emit('update:show', _show.value);
 });
 
@@ -52,7 +58,6 @@ const selectCategory = (cate: CategoryResponse) => {
 
 const reloadComponent = async (_show: boolean) => {
   showNewCategory.value = _show;
-  loadingBar.start();
   try {
     const { data } = await getMyCategories();
     categories.value = data.data;
@@ -63,7 +68,6 @@ const reloadComponent = async (_show: boolean) => {
       message.error(err.message);
     }
   }
-  loadingBar.finish();
 };
 </script>
 

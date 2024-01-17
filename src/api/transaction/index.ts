@@ -1,5 +1,5 @@
 import { api } from '../axios';
-import type { PageMeta } from '@/types/PageMeta.types';
+import type { PageMeta, PaginationRequest } from '@/types/Pagination.types';
 import type { TransactionResponse, TransactionRequest } from '@/types/transaction.type';
 import type { APIResponse } from '@/types/response.type';
 import { UrlConstants } from '@/constants';
@@ -31,8 +31,14 @@ const transaction = () => {
         configFormData
       );
     },
-    async getMyTransactions() {
-      return api.get<APIResponse<TransactionResponse[]>>(UrlConstants.TRANSACTION + '/me');
+    async getAllMyTransactions() {
+      return api.get<APIResponse<TransactionResponse[]>>(UrlConstants.TRANSACTION + '/all/me');
+    },
+    async getMyTransactions(params?: PaginationRequest<TransactionResponse>) {
+      return api.get<APIResponse<{ meta: PageMeta; items: TransactionResponse[] }>>(
+        UrlConstants.TRANSACTION + '/me',
+        { params }
+      );
     },
     async getTransactionById(id: string) {
       return api.get<APIResponse<TransactionResponse>>(UrlConstants.TRANSACTION, {
@@ -68,6 +74,7 @@ const transaction = () => {
 
 export const {
   createNewTransaction,
+  getAllMyTransactions,
   getMyTransactions,
   getTransactionById,
   editTransactionById,

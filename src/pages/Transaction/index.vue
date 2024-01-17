@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { IconFilter, IconSearch } from '@tabler/icons-vue';
 
-import { getMyTransactions } from '@/api/transaction';
+import { getAllMyTransactions } from '@/api/transaction';
 import type { TransactionResponse } from '@/types/transaction.type';
 import { TimeRange, TimeStampSettings } from '@/constants/timeStamp.enum';
 import { useTimeRangeSettingStore } from '@/stores/timeStampSetting';
 import { timelineGenerator, compare, type Timeline } from '@/utils/timeLine';
 
-const loadingBar = useLoadingBar();
 const message = useMessage();
 const { timeRange, changeTimeRange } = useTimeRangeSettingStore();
 
@@ -23,9 +22,8 @@ const transactionsFiltered = computed<TransactionResponse[]>(() =>
 );
 
 const loadMyTransactions = async () => {
-  loadingBar.start();
   try {
-    const myTransactions = await getMyTransactions();
+    const myTransactions = await getAllMyTransactions();
     transactions.value = myTransactions.data.data;
   } catch (err: any) {
     if (!!err.response) {
@@ -33,9 +31,7 @@ const loadMyTransactions = async () => {
     } else {
       message.error(err.message);
     }
-    loadingBar.error();
   }
-  loadingBar.finish();
 };
 onBeforeMount(loadMyTransactions);
 

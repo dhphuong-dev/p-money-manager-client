@@ -11,7 +11,6 @@ const dialog = useDialog();
 
 const myWallets = ref<WalletResponse[]>([]);
 const loadMyWallets = async () => {
-  loadingBar.start();
   try {
     const { data } = await getMyWallet();
     myWallets.value = data.data;
@@ -21,9 +20,7 @@ const loadMyWallets = async () => {
     } else {
       message.error(err.message);
     }
-    loadingBar.error();
   }
-  loadingBar.finish();
 };
 onBeforeMount(loadMyWallets);
 
