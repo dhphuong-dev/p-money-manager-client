@@ -12,23 +12,28 @@ interface Timeline {
 
 const TimeFormat: string = 'YYYY/MM/DD';
 
-const timelineGenerator = (timeRange: TimeRange): Timeline[] => {
+const timelineGenerator = (
+  timeRange: TimeRange,
+  addFuture?: boolean,
+  nums?: number
+): Timeline[] => {
   const timelines: Timeline[] = [];
   const today = dayjs();
   if (timeRange === TimeRange.DAY) {
-    timelines.push(
-      {
+    nums ??= 7;
+    addFuture ??= true;
+    addFuture &&
+      timelines.push({
         start: today.add(1, 'd'),
         end: today.add(1, 'd'),
         label: 'Future'
-      },
-      {
-        start: today,
-        end: today,
-        label: 'Today'
-      }
-    );
-    for (let i = 1; i < 7; ++i) {
+      });
+    timelines.push({
+      start: today,
+      end: today,
+      label: 'Today'
+    });
+    for (let i = 1; i < nums; ++i) {
       const d = today.subtract(i, 'd');
       timelines.push({
         start: d,
@@ -37,19 +42,20 @@ const timelineGenerator = (timeRange: TimeRange): Timeline[] => {
       });
     }
   } else if (timeRange === TimeRange.WEEK) {
-    timelines.push(
-      {
+    nums ??= 7;
+    addFuture ??= true;
+    addFuture &&
+      timelines.push({
         start: dayjs().endOf('week').add(1),
         end: dayjs().endOf('week').add(1),
         label: `Future`
-      },
-      {
-        start: dayjs().startOf('week'),
-        end: dayjs().endOf('week'),
-        label: `This Week`
-      }
-    );
-    for (let i = 1; i < 7; i++) {
+      });
+    timelines.push({
+      start: dayjs().startOf('week'),
+      end: dayjs().endOf('week'),
+      label: `This Week`
+    });
+    for (let i = 1; i < nums; i++) {
       const s = today.subtract(i, 'w').startOf('w');
       const e = today.subtract(i, 'w').endOf('w');
       timelines.push({
@@ -59,19 +65,20 @@ const timelineGenerator = (timeRange: TimeRange): Timeline[] => {
       });
     }
   } else if (timeRange === TimeRange.MONTH) {
-    timelines.push(
-      {
+    nums ??= 6;
+    addFuture ??= true;
+    addFuture &&
+      timelines.push({
         start: today.add(1, 'M').startOf('M'),
         end: today.add(1, 'M').endOf('M'),
         label: `Future`
-      },
-      {
-        start: today.startOf('M'),
-        end: today.endOf('M'),
-        label: `This Month`
-      }
-    );
-    for (let i = 1; i < 7; i++) {
+      });
+    timelines.push({
+      start: today.startOf('M'),
+      end: today.endOf('M'),
+      label: `This Month`
+    });
+    for (let i = 1; i < nums; i++) {
       const s = today.subtract(i, 'M').startOf('M');
       const e = today.subtract(i, 'M').endOf('M');
       timelines.push({
@@ -81,19 +88,20 @@ const timelineGenerator = (timeRange: TimeRange): Timeline[] => {
       });
     }
   } else if (timeRange === TimeRange.YEAR) {
-    timelines.push(
-      {
+    nums ??= 4;
+    addFuture ??= true;
+    addFuture &&
+      timelines.push({
         start: today.endOf('y').add(1),
         end: today.endOf('y').add(1),
         label: `Future`
-      },
-      {
-        start: today.startOf('y'),
-        end: today.endOf('y'),
-        label: `This Year`
-      }
-    );
-    for (let i = 1; i < 7; i++) {
+      });
+    timelines.push({
+      start: today.startOf('y'),
+      end: today.endOf('y'),
+      label: `This Year`
+    });
+    for (let i = 1; i < nums; i++) {
       const s = today.subtract(i, 'y').startOf('y');
       const e = today.subtract(i, 'y').endOf('y');
       timelines.push({
@@ -113,14 +121,14 @@ const compare = (
   timeRange: TimeRange
 ): boolean => {
   target = dayjs(target);
-  const start = timelines[timelineIndex].start;
+  const start: dayjs.Dayjs = timelines[timelineIndex].start;
   if (timelineIndex === 0) {
     return target >= start;
   }
   if (timeRange === TimeRange.DAY) {
     return target.isSame(start, 'D');
   } else {
-    const end = timelines[timelineIndex].end;
+    const end: dayjs.Dayjs = timelines[timelineIndex].end;
     const c: { [key: string]: dayjs.OpUnitType | null | undefined } = {
       [TimeRange.WEEK]: 'w',
       [TimeRange.MONTH]: 'M',

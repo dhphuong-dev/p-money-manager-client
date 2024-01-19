@@ -18,6 +18,5 @@
 <route lang="yaml">
 name:
 meta:
-  requiresAuth: true
   layout: blank
 </route>
