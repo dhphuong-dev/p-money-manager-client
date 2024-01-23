@@ -41,23 +41,25 @@ const transByDate = computed<
 >(() => {
   const allDates: string[] = transByTimeline.value.map((tran) => tran.date);
   const uniqueDates: string[] = [...new Set(allDates)];
-  return uniqueDates.map((d1) => {
+  return uniqueDates.map((date) => {
     let total = 0;
     const trans: TransactionResponse[] = [];
     transByTimeline.value.forEach((tran) => {
-      if (tran.date === d1) {
+      if (tran.date === date) {
         total += tran.total;
         trans.push(tran);
       }
     });
     return {
-      date: d1,
+      date: dayjs(date).format('YYYY MMMM DD'),
       total,
-      dayOfweek: dayjs(d1).format('dddd'),
+      dayOfweek: dayjs(date).format('dddd'),
       transactions: trans
     };
   });
 });
+
+const openReport = ref<boolean>(false);
 
 const loadMyTransactions = async () => {
   try {
@@ -82,7 +84,7 @@ watch(
 </script>
 
 <template>
-  <p-header class="container" title="My Report">
+  <p-header class="container" title="My Transactions">
     <template #function>
       <n-space>
         <n-icon :size="28"> <icon-search /> </n-icon>
@@ -99,6 +101,7 @@ watch(
       </n-space>
     </template>
   </p-header>
+
   <div class="transactions">
     <h2>Detail Transaction</h2>
     <n-tabs
@@ -135,15 +138,18 @@ watch(
               </p>
             </n-space>
             <p class="view-report">
-              <router-link to="/report">View report</router-link>
+              <span @click="openReport = true">View report</span>
             </p>
           </div>
+
+          <p-report v-model:show="openReport" :transactions="transByTimeline" />
+
           <!-- Transactions -->
           <div v-for="(gr, i) in transByDate" :key="i">
             <div class="transaction-title">
               <n-space justify="space-between" align="center">
                 <div>
-                  <p>{{ gr.dayOfweek }}</p>
+                  <p>{{ gr.dayOfweek }},</p>
                   <p>{{ gr.date }}</p>
                 </div>
                 <p class="total">{{ gr.total > 0 ? `+${gr.total}` : gr.total }}</p>
@@ -175,7 +181,7 @@ watch(
     margin-top: 2rem;
   }
   .transaction-view {
-    height: 60rem;
+    height: 70vh;
     overflow-y: scroll;
     .transaction-overview {
       background-color: #ffffff;
@@ -195,8 +201,10 @@ watch(
     }
     .view-report {
       text-align: center;
-      * {
-        color: $primary;
+      color: $primary;
+      span {
+        padding: 1rem;
+        cursor: pointer;
       }
     }
   }

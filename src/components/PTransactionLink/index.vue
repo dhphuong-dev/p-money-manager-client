@@ -35,7 +35,6 @@ onBeforeMount(async () => {
         </n-space>
         <n-space class="bottom" justify="space-between">
           <p>{{ categoryName }}</p>
-          <p>{{ dayjs(transaction.date).format('MMM DD') }}</p>
         </n-space>
       </div>
     </p-card>
