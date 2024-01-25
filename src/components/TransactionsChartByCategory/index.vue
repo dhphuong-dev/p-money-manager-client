@@ -13,15 +13,10 @@ use([TitleComponent, TooltipComponent, PieChart, CanvasRenderer]);
 type EChartsOption = ComposeOption<TitleComponentOption | TooltipComponentOption | PieSeriesOption>;
 
 import { CategoryType } from '@/types/category.type';
-import type { TransactionResponse } from '@/types/transaction.type';
+import type { TransactionsByCategory } from '@/types/transaction.type';
 
 const props = defineProps<{
-  transByCate: {
-    id: string;
-    name: string;
-    total: number;
-    transaction: TransactionResponse[];
-  }[];
+  transByCate: TransactionsByCategory[];
   type: CategoryType;
   height?: string;
 }>();
@@ -46,10 +41,12 @@ const option = computed<EChartsOption>(() => {
         type: 'pie',
         radius: ['20%', '50%'],
         center: ['50%', '55%'],
-        data: transByType.map((cate) => ({
-          value: props.type === CategoryType.INCOME ? cate.total : -cate.total,
-          name: cate.name
-        }))
+        data: transByType
+          .map((cate) => ({
+            value: props.type === CategoryType.INCOME ? cate.total : -cate.total,
+            name: cate.category.name
+          }))
+          .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
       }
     ]
   };

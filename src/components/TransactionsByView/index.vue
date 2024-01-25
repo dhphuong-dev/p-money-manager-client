@@ -1,0 +1,76 @@
+<script setup lang="ts">
+import dayjs from 'dayjs';
+
+import type { TransactionResponse } from '@/types/transaction.type';
+import { ViewBy } from '@/constants/TransactionFilter.constant';
+import { useTransFilterByView } from '@/composables/useTransFilterByView';
+
+const props = defineProps<{
+  transactions: TransactionResponse[];
+  view: ViewBy;
+}>();
+
+const { transByCate, transByDate, loadAllCategories } = useTransFilterByView(props.transactions);
+
+onBeforeMount(loadAllCategories);
+</script>
+
+<template>
+  <div class="transactions-by-view" v-if="view === ViewBy.TRANSACTION">
+    <div v-for="(gr, i) in transByDate" :key="i">
+      <div class="transaction-title">
+        <n-space justify="space-between" align="center">
+          <div>
+            <p>{{ gr.dayOfweek }},</p>
+            <p>{{ gr.date }}</p>
+          </div>
+          <p class="total">{{ gr.total > 0 ? `+${gr.total}` : gr.total }}</p>
+        </n-space>
+      </div>
+
+      <p-transaction-link v-for="tran in gr.transactions" :key="tran.id" :transaction="tran" />
+    </div>
+  </div>
+
+  <div class="transactions-by-view" v-else>
+    <div v-for="({ category, total, transactions: trans }, i) in transByCate" :key="i">
+      <div class="transaction-title">
+        <n-space justify="space-between" align="center">
+          <n-space align="center">
+            <div class="img-wrapper">
+              <img :src="category.imageUrl || ''" alt="Category image" />
+            </div>
+            <p>{{ category.name }}</p>
+          </n-space>
+          <p class="total">{{ total > 0 ? `+${total}` : total }}</p>
+        </n-space>
+      </div>
+
+      <p-transaction-link :view="view" v-for="tran in trans" :key="tran.id" :transaction="tran" />
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.transactions-by-view {
+  padding-bottom: 5rem;
+  .transaction-title {
+    padding: 0 2rem;
+    margin: 1rem 0;
+    .img-wrapper {
+      width: 5rem;
+      height: 5rem;
+      border-radius: 50%;
+      overflow: hidden;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    .total {
+      font-size: 20px;
+    }
+  }
+}
+</style>

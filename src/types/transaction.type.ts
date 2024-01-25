@@ -1,6 +1,8 @@
 import type { UploadFileInfo } from 'naive-ui';
 
 import type { CommonResponse } from './common.type';
+import { TimeRange, ViewBy } from '@/constants/TransactionFilter.constant';
+import type { CategoryResponse } from './category.type';
 
 interface Transaction {
   name: string;
@@ -24,4 +26,29 @@ interface TransactionResponse extends CommonResponse, Transaction {
   walletId: string;
 }
 
-export type { Transaction, TransactionRequest, TransactionResponse };
+interface TransactionFilter {
+  timeRange: TimeRange;
+  viewBy: ViewBy;
+}
+
+interface TransactionsByDate {
+  total: number;
+  date: string;
+  dayOfweek: string;
+  transactions: TransactionResponse[];
+}
+
+interface TransactionsByCategory {
+  category: CategoryResponse;
+  total: number;
+  transactions: TransactionResponse[];
+}
+
+export type {
+  Transaction,
+  TransactionRequest,
+  TransactionResponse,
+  TransactionFilter,
+  TransactionsByDate,
+  TransactionsByCategory
+};

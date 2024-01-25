@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 dayjs.extend(isBetween);
 
-import { TimeRange } from '@/constants/timeStamp.enum';
+import { TimeRange } from '@/constants/TransactionFilter.constant';
 
 interface Timeline {
   start: dayjs.Dayjs;
@@ -19,7 +19,7 @@ const timelineGenerator = (
 ): Timeline[] => {
   const timelines: Timeline[] = [];
   const today = dayjs();
-  if (timeRange === TimeRange.DAY) {
+  if (timeRange === TimeRange.Day) {
     nums ??= 7;
     addFuture ??= true;
     addFuture &&
@@ -41,7 +41,7 @@ const timelineGenerator = (
         label: d.format(TimeFormat)
       });
     }
-  } else if (timeRange === TimeRange.WEEK) {
+  } else if (timeRange === TimeRange.Week) {
     nums ??= 7;
     addFuture ??= true;
     addFuture &&
@@ -64,7 +64,7 @@ const timelineGenerator = (
         label: `${s.format(TimeFormat)}-${e.format(TimeFormat)}`
       });
     }
-  } else if (timeRange === TimeRange.MONTH) {
+  } else if (timeRange === TimeRange.Month) {
     nums ??= 6;
     addFuture ??= true;
     addFuture &&
@@ -87,7 +87,7 @@ const timelineGenerator = (
         label: `${s.year()}/${(s.month() + 1).toString().padStart(2, '0')}`
       });
     }
-  } else if (timeRange === TimeRange.YEAR) {
+  } else if (timeRange === TimeRange.Year) {
     nums ??= 4;
     addFuture ??= true;
     addFuture &&
@@ -110,6 +110,14 @@ const timelineGenerator = (
         label: s.year()
       });
     }
+  } else if (timeRange === TimeRange.All) {
+    timelines.push({
+      label: 'All transactions',
+      start: today,
+      end: today
+    });
+  } else if (timeRange === TimeRange.Custome) {
+    
   }
   return timelines;
 };
@@ -122,17 +130,20 @@ const compare = (
 ): boolean => {
   target = dayjs(target);
   const start: dayjs.Dayjs = timelines[timelineIndex].start;
+  if (timeRange === TimeRange.All) {
+    return true;
+  }
   if (timelineIndex === 0) {
     return target >= start;
   }
-  if (timeRange === TimeRange.DAY) {
+  if (timeRange === TimeRange.Day) {
     return target.isSame(start, 'D');
   } else {
     const end: dayjs.Dayjs = timelines[timelineIndex].end;
     const c: { [key: string]: dayjs.OpUnitType | null | undefined } = {
-      [TimeRange.WEEK]: 'w',
-      [TimeRange.MONTH]: 'M',
-      [TimeRange.YEAR]: 'y'
+      [TimeRange.Week]: 'w',
+      [TimeRange.Month]: 'M',
+      [TimeRange.Year]: 'y'
     };
     return target.isBetween(start, end, c[timeRange], '[]');
   }

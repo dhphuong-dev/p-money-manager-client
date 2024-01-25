@@ -1,24 +1,30 @@
 <script setup lang="ts">
+import dayjs from 'dayjs';
 import { IconFilter, IconSearch } from '@tabler/icons-vue';
 
 import { getAllMyTransactions } from '@/api/transaction';
-import type { TransactionResponse } from '@/types/transaction.type';
-import { TimeRange, TimeStampSettings } from '@/constants/timeStamp.enum';
-import { useTimeRangeSettingStore } from '@/stores/timeStampSetting';
+import type { TransactionFilter, TransactionResponse } from '@/types/transaction.type';
+import { TimeRange } from '@/constants/TransactionFilter.constant';
+import { useTransactionFilterStore } from '@/stores/TransactionFilter';
 import { timelineGenerator, compare, type Timeline } from '@/utils/timeLine';
-import dayjs from 'dayjs';
 
 const message = useMessage();
-const { timeRange, changeTimeRange } = useTimeRangeSettingStore();
+const transactionFilterStore = useTransactionFilterStore();
 
-const timeRangeSeleted = ref<TimeRange>(timeRange);
-const timelines = computed<Timeline[]>(() => timelineGenerator(timeRangeSeleted.value));
-const timelineSelected = ref<number>(1);
-
+const showFilter = ref<boolean>(false);
+const openReport = ref<boolean>(false);
+const reloadTimelineTabs = ref<boolean>(true);
 const transactions = ref<TransactionResponse[]>([]);
+
+const filter = reactive<TransactionFilter>(transactionFilterStore.transactionFilter);
+const timelines = computed<Timeline[]>(() => timelineGenerator(filter.timeRange));
+const timelineSelected = ref<number>(
+  +!(filter.timeRange === TimeRange.All || filter.timeRange === TimeRange.Custome)
+);
+
 const transByTimeline = computed<TransactionResponse[]>(() =>
   transactions.value
-    .filter((t) => compare(t.date, timelines.value, timelineSelected.value, timeRangeSeleted.value))
+    .filter((t) => compare(t.date, timelines.value, timelineSelected.value, filter.timeRange))
     .sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf())
 );
 const total = computed<{ income: number; expenses: number }>(() => ({
@@ -31,35 +37,6 @@ const total = computed<{ income: number; expenses: number }>(() => ({
     .map((t) => t.total)
     .reduce((pre, cur) => pre + cur, 0)
 }));
-const transByDate = computed<
-  {
-    total: number;
-    date: string;
-    dayOfweek: string;
-    transactions: TransactionResponse[];
-  }[]
->(() => {
-  const allDates: string[] = transByTimeline.value.map((tran) => tran.date);
-  const uniqueDates: string[] = [...new Set(allDates)];
-  return uniqueDates.map((date) => {
-    let total = 0;
-    const trans: TransactionResponse[] = [];
-    transByTimeline.value.forEach((tran) => {
-      if (tran.date === date) {
-        total += tran.total;
-        trans.push(tran);
-      }
-    });
-    return {
-      date: dayjs(date).format('YYYY MMMM DD'),
-      total,
-      dayOfweek: dayjs(date).format('dddd'),
-      transactions: trans
-    };
-  });
-});
-
-const openReport = ref<boolean>(false);
 
 const loadMyTransactions = async () => {
   try {
@@ -76,11 +53,19 @@ const loadMyTransactions = async () => {
 onBeforeMount(loadMyTransactions);
 
 watch(
-  () => timeRangeSeleted.value,
+  () => [filter.timeRange, filter.viewBy],
   () => {
-    changeTimeRange(timeRangeSeleted.value);
+    reloadTimelineTabs.value = false;
+    setTimeout(() => {
+      reloadTimelineTabs.value = true;
+    }, 0);
   }
 );
+watchEffect(() => {
+  timelineSelected.value = +!(
+    filter.timeRange === TimeRange.All || filter.timeRange === TimeRange.Custome
+  );
+});
 </script>
 
 <template>
@@ -88,84 +73,66 @@ watch(
     <template #function>
       <n-space>
         <n-icon :size="28"> <icon-search /> </n-icon>
-        <n-popselect
-          v-model:value="timeRangeSeleted"
-          :options="TimeStampSettings"
-          size="huge"
-          placement="bottom-end"
-          trigger="click"
-        >
-          <n-icon :size="28"> <icon-filter /> </n-icon>
-          <template #header> Select time range </template>
-        </n-popselect>
+        <n-icon :size="28" @click="showFilter = true">
+          <icon-filter />
+        </n-icon>
       </n-space>
     </template>
   </p-header>
 
+  <transaction-filter v-model:show="showFilter" v-model:value="filter" />
+
   <div class="transactions">
     <h2>Detail Transaction</h2>
-    <n-tabs
-      type="line"
-      animated
-      size="large"
-      :theme-overrides="{
-        tabFontWeight: 'bold',
-        tabFontWeightActive: 'bold'
-      }"
-      :tabs-padding="20"
-      v-model:value="timelineSelected"
-    >
-      <n-tab-pane v-for="({ label }, i) in timelines" :key="i" :name="i" :tab="label">
-        <div class="transaction-view" v-if="transByTimeline.length">
-          <div class="transaction-overview">
-            <n-space class="line" justify="space-between">
-              <p>Income</p>
-              <p class="total">{{ total.income !== 0 ? `+${total.income}` : 0 }}</p>
-            </n-space>
-            <n-space class="line" justify="space-between">
-              <p>Expense</p>
-              <p class="total">{{ total.expenses }}</p>
-            </n-space>
-            <hr />
-            <n-space justify="space-between">
-              <p></p>
-              <p class="total">
-                {{
-                  total.expenses + total.income > 0
-                    ? `+${total.expenses + total.income}`
-                    : total.expenses + total.income
-                }}
-              </p>
-            </n-space>
-            <p class="view-report">
-              <span @click="openReport = true">View report</span>
-            </p>
-          </div>
-
-          <p-report v-model:show="openReport" :transactions="transByTimeline" />
-
-          <!-- Transactions -->
-          <div v-for="(gr, i) in transByDate" :key="i">
-            <div class="transaction-title">
-              <n-space justify="space-between" align="center">
-                <div>
-                  <p>{{ gr.dayOfweek }},</p>
-                  <p>{{ gr.date }}</p>
-                </div>
-                <p class="total">{{ gr.total > 0 ? `+${gr.total}` : gr.total }}</p>
+    <Transition>
+      <n-tabs
+        type="line"
+        animated
+        size="large"
+        :theme-overrides="{
+          tabFontWeight: 'bold',
+          tabFontWeightActive: 'bold'
+        }"
+        :tabs-padding="20"
+        v-model:value="timelineSelected"
+        v-if="reloadTimelineTabs"
+      >
+        <n-tab-pane v-for="({ label }, i) in timelines" :key="i" :name="i" :tab="label">
+          <div class="transaction-view" v-if="transByTimeline.length">
+            <div class="transaction-overview">
+              <n-space class="line" justify="space-between">
+                <p>Income</p>
+                <p class="total">{{ total.income !== 0 ? `+${total.income}` : 0 }}</p>
               </n-space>
+              <n-space class="line" justify="space-between">
+                <p>Expense</p>
+                <p class="total">{{ total.expenses }}</p>
+              </n-space>
+              <hr />
+              <n-space justify="space-between">
+                <p></p>
+                <p class="total">
+                  {{
+                    total.expenses + total.income > 0
+                      ? `+${total.expenses + total.income}`
+                      : total.expenses + total.income
+                  }}
+                </p>
+              </n-space>
+              <p class="view-report">
+                <span @click="openReport = true">View report</span>
+              </p>
             </div>
 
-            <p-transaction-link
-              v-for="tran in gr.transactions"
-              :key="tran.id"
-              :transaction="tran"
-            />
+            <p-report v-model:show="openReport" :transactions="transByTimeline" />
+
+            <!-- Transactions -->
+            <transactions-by-view :view="filter.viewBy" :transactions="transByTimeline" />
           </div>
-        </div>
-        <n-empty v-else description="No transactions" size="huge"></n-empty>
-      </n-tab-pane>
-    </n-tabs>
+          <n-empty v-else description="No transactions" size="huge"></n-empty>
+        </n-tab-pane>
+      </n-tabs>
+    </Transition>
   </div>
 </template>
 
@@ -195,10 +162,6 @@ watch(
         margin-bottom: 1rem;
       }
     }
-    .transaction-title {
-      padding: 0 2rem;
-      margin-bottom: 1rem;
-    }
     .view-report {
       text-align: center;
       color: $primary;
@@ -208,6 +171,16 @@ watch(
       }
     }
   }
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 1s ease;
+  transition: transform 0.5s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  transform: translate(-2rem, 0);
+  opacity: 0;
 }
 </style>
 

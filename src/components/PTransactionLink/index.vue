@@ -3,8 +3,11 @@ import dayjs from 'dayjs';
 
 import { getCategoryById } from '@/api/category';
 import type { TransactionResponse } from '@/types/transaction.type';
+import { ViewBy } from '@/constants/TransactionFilter.constant';
+
 const props = defineProps<{
   transaction: TransactionResponse;
+  view?: ViewBy;
 }>();
 
 const categoryName = ref<string>('');
@@ -34,7 +37,10 @@ onBeforeMount(async () => {
           </h3>
         </n-space>
         <n-space class="bottom" justify="space-between">
-          <p>{{ categoryName }}</p>
+          <p v-if="view === ViewBy.CATEGORY">
+            {{ dayjs(transaction.date).format('YYYY MMM DD, dddd') }}
+          </p>
+          <p v-else>{{ categoryName }}</p>
         </n-space>
       </div>
     </p-card>
@@ -44,7 +50,7 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .transaction {
   justify-content: start;
-  margin-bottom: 20px;
+  // margin-bottom: 20px;
   .transaction-img {
     height: 50px;
     width: 50px;

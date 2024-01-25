@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { IconX, IconCalendarMonth } from '@tabler/icons-vue';
 
-import { getCategoryById } from '@/api/category';
 import type { TransactionResponse } from '@/types/transaction.type';
-import { CategoryType, type CategoryResponse } from '@/types/category.type';
+import { CategoryType } from '@/types/category.type';
+import { useTransFilterByView } from '@/composables/useTransFilterByView';
 
 const props = defineProps<{
   show: boolean;
@@ -14,41 +14,8 @@ const emit = defineEmits<{
 }>();
 
 const _show = ref<boolean>(props.show);
-const allCategories = ref<CategoryResponse[]>([]);
-const transByCate = computed<
-  { id: string; name: string; total: number; transaction: TransactionResponse[] }[]
->(() => {
-  const uniqueCateID: string[] = [...new Set(allCategories.value.map(({ id }) => id))];
-  const uniqueCategory: { id: string; name: string }[] = uniqueCateID.map((id) => ({
-    id,
-    name: allCategories.value.find((c) => c.id === id)?.name!
-  }));
-
-  return uniqueCategory.map((cate) => {
-    let total: number = 0;
-    const trans: TransactionResponse[] = [];
-    props.transactions.forEach((tran) => {
-      if (tran.categoryId === cate.id) {
-        total += tran.total;
-        trans.push(tran);
-      }
-    });
-    return {
-      ...cate,
-      total,
-      transaction: trans
-    };
-  });
-});
-
-onBeforeMount(async () => {
-  props.transactions.forEach(async (tran) => {
-    try {
-      const res = await getCategoryById(tran.categoryId);
-      allCategories.value.push(res.data.data);
-    } catch (err: any) {}
-  });
-});
+const { transByCate, loadAllCategories } = useTransFilterByView(props.transactions);
+onBeforeMount(loadAllCategories);
 
 watchEffect(() => {
   _show.value = props.show;
