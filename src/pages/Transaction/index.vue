@@ -80,7 +80,7 @@ watchEffect(() => {
     </template>
   </p-header>
 
-  <transaction-filter v-model:show="showFilter" v-model:value="filter" />
+  <transaction-filter v-model:show="showFilter" />
 
   <div class="transactions">
     <h2>Detail Transaction</h2>

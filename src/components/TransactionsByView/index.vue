@@ -1,22 +1,25 @@
 <script setup lang="ts">
-import dayjs from 'dayjs';
-
 import type { TransactionResponse } from '@/types/transaction.type';
 import { ViewBy } from '@/constants/TransactionFilter.constant';
 import { useTransFilterByView } from '@/composables/useTransFilterByView';
+import { useTransactionFilterStore } from '@/stores/TransactionFilter';
 
 const props = defineProps<{
   transactions: TransactionResponse[];
-  view: ViewBy;
+  view?: ViewBy;
 }>();
 
+const { transactionFilter } = useTransactionFilterStore();
 const { transByCate, transByDate, loadAllCategories } = useTransFilterByView(props.transactions);
 
 onBeforeMount(loadAllCategories);
 </script>
 
 <template>
-  <div class="transactions-by-view" v-if="view === ViewBy.TRANSACTION">
+  <div
+    class="transactions-by-view"
+    v-if="view === ViewBy.TRANSACTION || transactionFilter.viewBy === ViewBy.TRANSACTION"
+  >
     <div v-for="(gr, i) in transByDate" :key="i">
       <div class="transaction-title">
         <n-space justify="space-between" align="center">
@@ -46,7 +49,12 @@ onBeforeMount(loadAllCategories);
         </n-space>
       </div>
 
-      <p-transaction-link :view="view" v-for="tran in trans" :key="tran.id" :transaction="tran" />
+      <p-transaction-link
+        :view="transactionFilter.viewBy"
+        v-for="tran in trans"
+        :key="tran.id"
+        :transaction="tran"
+      />
     </div>
   </div>
 </template>

@@ -5,32 +5,19 @@ import type { TransactionFilter } from '@/types/transaction.type';
 
 const props = defineProps<{
   show: boolean;
-  value: {
-    timeRange: TimeRange;
-    viewBy: ViewBy;
-  };
 }>();
 const emits = defineEmits<{
   (e: 'update:show', show: boolean): void;
-  (e: 'update:value', value: TransactionFilter): void;
 }>();
 
-const { saveFilter } = useTransactionFilterStore();
+const { saveFilter, transactionFilter } = useTransactionFilterStore();
 
 const _show = ref<boolean>(props.show);
-const _value = reactive<TransactionFilter>(props.value);
 const showTimeRange = ref<boolean>(false);
 watch(
   () => props.show,
   () => {
     _show.value = props.show;
-  }
-);
-watch(
-  () => props.value,
-  () => {
-    _value.timeRange = props.value.timeRange;
-    _value.viewBy = props.value.viewBy;
   }
 );
 watchEffect(() => {
@@ -42,15 +29,11 @@ const showSelectTimeRangeOption = () => {
   showTimeRange.value = true;
 };
 const changeTransactionView = (v: ViewBy) => {
-  _value.viewBy = v;
-  saveFilter({ v: _value.viewBy });
-  emits('update:value', _value);
+  saveFilter({ v });
   _show.value = false;
 };
 const onSelectTimeRange = (t: TimeRange): void => {
-  _value.timeRange = t;
-  saveFilter({ t: _value.timeRange });
-  emits('update:value', _value);
+  saveFilter({ t });
   showTimeRange.value = false;
 };
 </script>
@@ -61,7 +44,7 @@ const onSelectTimeRange = (t: TimeRange): void => {
       <p>Filter</p>
       <p @click="showSelectTimeRangeOption">Select time range</p>
       <p
-        v-if="_value.viewBy === ViewBy.TRANSACTION"
+        v-if="transactionFilter.viewBy === ViewBy.TRANSACTION"
         @click="changeTransactionView(ViewBy.CATEGORY)"
       >
         View by category
