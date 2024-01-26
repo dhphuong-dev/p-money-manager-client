@@ -2,7 +2,8 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 dayjs.extend(isBetween);
 
-import { TimeRange } from '@/constants/TransactionFilter.constant';
+import { TimeRange } from '@/constants';
+import { useTransactionFilterStore } from '@/stores/TransactionFilter';
 
 interface Timeline {
   start: dayjs.Dayjs;
@@ -116,8 +117,14 @@ const timelineGenerator = (
       start: today,
       end: today
     });
-  } else if (timeRange === TimeRange.Custome) {
-    
+  } else if (timeRange === TimeRange.Custom) {
+    const filter = useTransactionFilterStore();
+    const { start, end } = filter.transactionFilter;
+    timelines.push({
+      start: dayjs(start),
+      end: dayjs(end),
+      label: `${dayjs(start).format(TimeFormat)}-${dayjs(end).format(TimeFormat)}`
+    });
   }
   return timelines;
 };
@@ -128,25 +135,16 @@ const compare = (
   timelineIndex: number = 1,
   timeRange: TimeRange
 ): boolean => {
-  target = dayjs(target);
-  const start: dayjs.Dayjs = timelines[timelineIndex].start;
   if (timeRange === TimeRange.All) {
     return true;
   }
-  if (timelineIndex === 0) {
+  target = dayjs(target);
+  const start: dayjs.Dayjs = timelines[timelineIndex].start;
+  if (timelineIndex === 0 && timeRange !== TimeRange.Custom) {
     return target >= start;
   }
-  if (timeRange === TimeRange.Day) {
-    return target.isSame(start, 'D');
-  } else {
-    const end: dayjs.Dayjs = timelines[timelineIndex].end;
-    const c: { [key: string]: dayjs.OpUnitType | null | undefined } = {
-      [TimeRange.Week]: 'w',
-      [TimeRange.Month]: 'M',
-      [TimeRange.Year]: 'y'
-    };
-    return target.isBetween(start, end, c[timeRange], '[]');
-  }
+  const end: dayjs.Dayjs = timelines[timelineIndex].end;
+  return target.isBetween(start, end, 'd', '[]');
 };
 
 export { timelineGenerator, compare, type Timeline };

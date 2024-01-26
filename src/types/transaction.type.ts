@@ -1,7 +1,7 @@
 import type { UploadFileInfo } from 'naive-ui';
 
 import type { CommonResponse } from './common.type';
-import { TimeRange, ViewBy } from '@/constants/TransactionFilter.constant';
+import { TimeRange, ViewBy } from '@/constants';
 import type { CategoryResponse } from './category.type';
 
 interface Transaction {
@@ -29,6 +29,8 @@ interface TransactionResponse extends CommonResponse, Transaction {
 interface TransactionFilter {
   timeRange: TimeRange;
   viewBy: ViewBy;
+  start?: number;
+  end?: number;
 }
 
 interface TransactionsByDate {

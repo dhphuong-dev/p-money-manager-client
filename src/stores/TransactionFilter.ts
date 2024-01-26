@@ -10,9 +10,23 @@ export const useTransactionFilterStore = defineStore('TransactionFilter', () => 
     }
   );
 
-  const saveFilter = ({ t, v }: { t?: TimeRange; v?: ViewBy }): void => {
+  const saveFilter = ({
+    t,
+    v,
+    s,
+    e
+  }: {
+    t?: TimeRange;
+    v?: ViewBy;
+    s?: number;
+    e?: number;
+  }): void => {
     if (!!t) {
       transactionFilter.timeRange = t;
+      if (t === TimeRange.Custom) {
+        transactionFilter.start = s;
+        transactionFilter.end = e;
+      }
       localStorage.setItem(ELocalStorage.TRANSACTION_FILTER, JSON.stringify(transactionFilter));
     }
     if (!!v) {

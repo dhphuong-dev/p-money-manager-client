@@ -4,22 +4,22 @@ import { IconFilter, IconSearch } from '@tabler/icons-vue';
 
 import { getAllMyTransactions } from '@/api/transaction';
 import type { TransactionFilter, TransactionResponse } from '@/types/transaction.type';
-import { TimeRange } from '@/constants/TransactionFilter.constant';
+import { TimeRange } from '@/constants';
 import { useTransactionFilterStore } from '@/stores/TransactionFilter';
 import { timelineGenerator, compare, type Timeline } from '@/utils/timeLine';
 
 const message = useMessage();
-const transactionFilterStore = useTransactionFilterStore();
+const filterStore = useTransactionFilterStore();
 
 const showFilter = ref<boolean>(false);
 const openReport = ref<boolean>(false);
 const reloadTimelineTabs = ref<boolean>(true);
 const transactions = ref<TransactionResponse[]>([]);
 
-const filter = reactive<TransactionFilter>(transactionFilterStore.transactionFilter);
+const filter = reactive<TransactionFilter>(filterStore.transactionFilter);
 const timelines = computed<Timeline[]>(() => timelineGenerator(filter.timeRange));
 const timelineSelected = ref<number>(
-  +!(filter.timeRange === TimeRange.All || filter.timeRange === TimeRange.Custome)
+  +!(filter.timeRange === TimeRange.All || filter.timeRange === TimeRange.Custom)
 );
 
 const transByTimeline = computed<TransactionResponse[]>(() =>
@@ -53,7 +53,7 @@ const loadMyTransactions = async () => {
 onBeforeMount(loadMyTransactions);
 
 watch(
-  () => [filter.timeRange, filter.viewBy],
+  () => Object.values(filter),
   () => {
     reloadTimelineTabs.value = false;
     setTimeout(() => {
@@ -63,7 +63,7 @@ watch(
 );
 watchEffect(() => {
   timelineSelected.value = +!(
-    filter.timeRange === TimeRange.All || filter.timeRange === TimeRange.Custome
+    filter.timeRange === TimeRange.All || filter.timeRange === TimeRange.Custom
   );
 });
 </script>
