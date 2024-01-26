@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 import { getCategoryById } from '@/api/category';
 import type { TransactionResponse } from '@/types/transaction.type';
-import { ViewBy } from '@/constants/TransactionFilter.constant';
+import { ViewBy } from '@/constants';
 
 const props = defineProps<{
   transaction: TransactionResponse;

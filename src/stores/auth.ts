@@ -1,6 +1,6 @@
 import type { APIResponse } from '@/types/response.type';
 import type { ILoginBody, IRegisterBody, UserLoginResponse } from '@/types/auth.types';
-import { localStorageEnum } from '@/constants';
+import { ELocalStorage } from '@/constants';
 import { login, register, resetPassword } from '@/api/auth';
 
 interface IAuthState {
@@ -12,7 +12,7 @@ interface IAuthState {
 export const useAuthStore = defineStore('authStore', {
   state: (): IAuthState => {
     return {
-      acccesToken: localStorage.getItem(localStorageEnum.ACCESS_TOKEN) || '',
+      acccesToken: localStorage.getItem(ELocalStorage.ACCESS_TOKEN) || '',
       userId: ''
     };
   },
@@ -23,19 +23,19 @@ export const useAuthStore = defineStore('authStore', {
     setUser(token: string, id: string) {
       this.userId = id;
       this.acccesToken = token;
-      localStorage.setItem(localStorageEnum.ACCESS_TOKEN, this.acccesToken);
+      localStorage.setItem(ELocalStorage.ACCESS_TOKEN, this.acccesToken);
     },
     clearUser() {
       this.userId = '';
       this.acccesToken = '';
-      localStorage.removeItem(localStorageEnum.ACCESS_TOKEN);
+      localStorage.removeItem(ELocalStorage.ACCESS_TOKEN);
     },
     async login(user: ILoginBody): Promise<APIResponse<UserLoginResponse>> {
       try {
         const { data } = await login(user);
         this.userId = data.data.id;
         this.acccesToken = data.data.accessToken;
-        localStorage.setItem(localStorageEnum.ACCESS_TOKEN, this.acccesToken);
+        localStorage.setItem(ELocalStorage.ACCESS_TOKEN, this.acccesToken);
         return Promise.resolve(data);
       } catch (err: any) {
         return Promise.reject(err.response.data);
@@ -52,7 +52,7 @@ export const useAuthStore = defineStore('authStore', {
     async logout() {
       this.userId = '';
       this.acccesToken = '';
-      localStorage.removeItem(localStorageEnum.ACCESS_TOKEN);
+      localStorage.removeItem(ELocalStorage.ACCESS_TOKEN);
     }
   }
 });

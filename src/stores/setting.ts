@@ -1,4 +1,4 @@
-import { localStorageEnum } from '@/constants';
+import { ELocalStorage } from '@/constants';
 
 interface ISetting {
   darkMode: boolean;
@@ -7,12 +7,12 @@ interface ISetting {
 export const useSettingStore = defineStore('settingStore', {
   state: (): ISetting => {
     return {
-      darkMode: JSON.parse(localStorage.getItem(localStorageEnum.DARK_MODE) || 'false')
+      darkMode: JSON.parse(localStorage.getItem(ELocalStorage.DARK_MODE) || 'false')
     };
   },
   actions: {
     changeTheme() {
-      localStorage.setItem(localStorageEnum.DARK_MODE, JSON.stringify(!this.darkMode));
+      localStorage.setItem(ELocalStorage.DARK_MODE, JSON.stringify(!this.darkMode));
       this.darkMode = !this.darkMode;
     }
   }

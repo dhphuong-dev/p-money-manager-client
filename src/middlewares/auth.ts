@@ -1,4 +1,4 @@
-import { localStorageEnum } from '../constants/auth.enum';
+import { ELocalStorage } from '@/constants';
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 
 export const auth = async (
@@ -6,7 +6,7 @@ export const auth = async (
   to: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  const accessToken = localStorage.getItem(localStorageEnum.ACCESS_TOKEN);
+  const accessToken = localStorage.getItem(ELocalStorage.ACCESS_TOKEN);
   if (from.name === 'Login' && accessToken) {
     return next();
   }

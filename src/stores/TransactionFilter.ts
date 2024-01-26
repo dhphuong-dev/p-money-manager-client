@@ -1,26 +1,23 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
-import {
-  TransactionFilterStorage,
-  TimeRange,
-  ViewBy
-} from '@/constants/TransactionFilter.constant';
+import { TimeRange, ViewBy, ELocalStorage } from '@/constants';
 import type { TransactionFilter } from '@/types/transaction.type';
 
 export const useTransactionFilterStore = defineStore('TransactionFilter', () => {
-  const transactionFilter = reactive<TransactionFilter>({
-    timeRange:
-      TimeRange[localStorage.getItem(TransactionFilterStorage.TimeRange) || TimeRange.Month],
-    viewBy: ViewBy[localStorage.getItem(TransactionFilterStorage.ViewBy) || ViewBy.TRANSACTION]
-  });
+  const transactionFilter = reactive<TransactionFilter>(
+    JSON.parse(localStorage.getItem(ELocalStorage.TRANSACTION_FILTER)!) || {
+      timeRange: TimeRange.Day,
+      viewBy: ViewBy.TRANSACTION
+    }
+  );
 
   const saveFilter = ({ t, v }: { t?: TimeRange; v?: ViewBy }): void => {
     if (!!t) {
       transactionFilter.timeRange = t;
-      localStorage.setItem(TransactionFilterStorage.TimeRange, transactionFilter.timeRange);
+      localStorage.setItem(ELocalStorage.TRANSACTION_FILTER, JSON.stringify(transactionFilter));
     }
     if (!!v) {
       transactionFilter.viewBy = v;
-      localStorage.setItem(TransactionFilterStorage.ViewBy, transactionFilter.viewBy);
+      localStorage.setItem(ELocalStorage.TRANSACTION_FILTER, JSON.stringify(transactionFilter));
     }
   };
 

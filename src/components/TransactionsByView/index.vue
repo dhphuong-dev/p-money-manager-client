@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TransactionResponse } from '@/types/transaction.type';
-import { ViewBy } from '@/constants/TransactionFilter.constant';
+import { ViewBy } from '@/constants';
 import { useTransFilterByView } from '@/composables/useTransFilterByView';
 import { useTransactionFilterStore } from '@/stores/TransactionFilter';
 

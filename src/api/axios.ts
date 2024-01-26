@@ -1,7 +1,7 @@
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import router from '@/router';
-import { localStorageEnum } from '@/constants/auth.enum';
+import { ELocalStorage } from '@/constants';
 
 const axiosIns = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
@@ -19,7 +19,7 @@ const axiosInsNoInterceptors = axios.create({
 
 axiosIns.interceptors.request.use(
   function (config: InternalAxiosRequestConfig) {
-    const token = `Bearer ${localStorage.getItem(localStorageEnum.ACCESS_TOKEN)}`;
+    const token = `Bearer ${localStorage.getItem(ELocalStorage.ACCESS_TOKEN)}`;
     config.headers.Authorization = token;
     return config;
   },
@@ -34,7 +34,7 @@ axiosIns.interceptors.response.use(
   },
   function (error) {
     if (error.response?.status == 401) {
-      localStorage.removeItem(localStorageEnum.ACCESS_TOKEN);
+      localStorage.removeItem(ELocalStorage.ACCESS_TOKEN);
       router.push('/login');
     }
     return Promise.reject(error);
