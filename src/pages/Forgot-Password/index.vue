@@ -15,7 +15,7 @@ const message = useMessage();
 const rules = {
   email: {
     required: true,
-    validator: (rule: FormItemRule, value: string) => emaildValidator(rule, value),
+    validator: emaildValidator,
     trigger: 'blur'
   }
 };

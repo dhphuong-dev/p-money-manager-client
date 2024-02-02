@@ -6,6 +6,7 @@ import type { ILoginBody } from '@/types/auth.types';
 import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
+const route = useRoute();
 const loadingBar = useLoadingBar();
 const message = useMessage();
 const { login } = useAuthStore();
@@ -17,12 +18,12 @@ const loading = ref<boolean>(false);
 const rules = {
   email: {
     required: true,
-    validator: (rule: FormItemRule, value: string) => emaildValidator(rule, value),
+    validator: emaildValidator,
     trigger: 'blur'
   },
   password: {
     required: true,
-    validator: (rule: FormItemRule, value: string) => passwordValidator(rule, value),
+    validator: passwordValidator,
     trigger: 'blur'
   }
 };
@@ -35,7 +36,7 @@ const loginHandler = async () => {
       try {
         await login(model.value);
         message.success('Login succesful');
-        router.push({ name: 'Home', params: {} });
+        router.push((route.query.redirect as string) || '/home');
       } catch (err: any) {
         if (!!err.response) {
           message.error(err.response.data.message);

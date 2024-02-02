@@ -10,9 +10,7 @@ const router = createRouter({
   routes
 });
 
-router.beforeEach(async (from, to, next) => {
-  return auth(from, to, next);
-});
+router.beforeEach(auth);
 
 router.afterEach((to) => {
   const defaultDocumentTitle = 'pMoney Manager';

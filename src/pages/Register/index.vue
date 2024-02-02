@@ -26,12 +26,12 @@ const rules = {
   },
   email: {
     required: true,
-    validator: (rule: FormItemRule, email: string) => emaildValidator(rule, email),
+    validator: emaildValidator,
     trigger: 'blur'
   },
   password: {
     required: true,
-    validator: (rule: FormItemRule, password: string) => passwordValidator(rule, password),
+    validator: passwordValidator,
     trigger: 'blur'
   },
   confirmPassword: {
@@ -49,7 +49,7 @@ const registerHandler = () => {
       loadingBar.start();
       try {
         await register(model.value);
-        await login({ email: model.value.email, password: model.value.password });
+        await login(model.value);
         router.push({ name: 'Home', params: {} });
         message.success('Register succesful');
       } catch (err: any) {

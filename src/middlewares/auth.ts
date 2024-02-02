@@ -1,23 +1,14 @@
-import { ELocalStorage } from '@/constants';
+import { useAuthStore } from '@/stores/auth';
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 
-export const auth = async (
-  from: RouteLocationNormalized,
+export const auth = (
   to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  const accessToken = localStorage.getItem(ELocalStorage.ACCESS_TOKEN);
-  if (from.name === 'Login' && accessToken) {
-    return next();
+  const authStore = useAuthStore();
+  if (!!to.meta.requiresAuth && !authStore.loggedIn) {
+    return next({ name: 'Login', query: { redirect: to.path } });
   }
-
-  if (from.meta.requiresAuth) {
-    if (accessToken) {
-      next();
-    } else {
-      next(`/login?redirect=${to.path}`);
-    }
-  } else {
-    next();
-  }
+  return next();
 };

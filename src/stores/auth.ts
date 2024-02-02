@@ -5,35 +5,30 @@ import { login, register, resetPassword } from '@/api/auth';
 
 interface IAuthState {
   acccesToken: string;
-  userId: string;
   returnUrl?: URL;
 }
 
 export const useAuthStore = defineStore('authStore', {
   state: (): IAuthState => {
     return {
-      acccesToken: localStorage.getItem(ELocalStorage.ACCESS_TOKEN) || '',
-      userId: ''
+      acccesToken: localStorage.getItem(ELocalStorage.ACCESS_TOKEN) || ''
     };
   },
   getters: {
-    loggedIn: ({ acccesToken }) => !!acccesToken
+    loggedIn: ({ acccesToken }): boolean => !!acccesToken
   },
   actions: {
-    setUser(token: string, id: string) {
-      this.userId = id;
+    setUser(token: string) {
       this.acccesToken = token;
       localStorage.setItem(ELocalStorage.ACCESS_TOKEN, this.acccesToken);
     },
     clearUser() {
-      this.userId = '';
       this.acccesToken = '';
       localStorage.removeItem(ELocalStorage.ACCESS_TOKEN);
     },
     async login(user: ILoginBody): Promise<APIResponse<UserLoginResponse>> {
       try {
         const { data } = await login(user);
-        this.userId = data.data.id;
         this.acccesToken = data.data.accessToken;
         localStorage.setItem(ELocalStorage.ACCESS_TOKEN, this.acccesToken);
         return Promise.resolve(data);
@@ -50,7 +45,6 @@ export const useAuthStore = defineStore('authStore', {
       }
     },
     async logout() {
-      this.userId = '';
       this.acccesToken = '';
       localStorage.removeItem(ELocalStorage.ACCESS_TOKEN);
     }
