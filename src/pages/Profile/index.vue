@@ -2,6 +2,7 @@
 import {
   IconSettings,
   IconChevronRight,
+  IconUser,
   IconWallet,
   IconBoxSeam,
   IconLock,
@@ -19,6 +20,11 @@ const { logout } = useAuthStore();
 
 const navigates = [
   {
+    route: 'Home',
+    name: 'My Account',
+    icon: IconUser
+  },
+  {
     route: 'Wallet',
     name: 'My Wallets',
     icon: IconWallet
@@ -29,12 +35,12 @@ const navigates = [
     icon: IconBoxSeam
   },
   {
-    route: 'Home',
-    name: 'Pricvacy',
+    route: 'Privacy Policy',
+    name: 'Privacy Policy',
     icon: IconLock
   },
   {
-    route: 'Home',
+    route: 'About',
     name: 'About',
     icon: IconInfoSquareRounded
   }
@@ -71,36 +77,31 @@ const logoutHandler = () => {
     </template>
   </p-header>
 
-  <div class="container" id="profile">
+  <div id="profile">
     <n-space class="user" vertical align="center">
       <n-avatar round :size="90" :src="user?.avatar" />
       <div class="name">{{ user?.fullName }}</div>
       <div class="email">{{ user?.email }}</div>
     </n-space>
 
-    <div class="general">General</div>
-
-    <router-link
-      v-for="(navigate, i) in navigates"
-      :key="i"
-      :to="{ name: navigate.route }"
-      class="link-item"
-    >
-      <n-space align="center" justify="space-between">
-        <n-space align="center" justify="space-between">
+    <router-link v-for="(navigate, i) in navigates" :key="i" :to="{ name: navigate.route }">
+      <p-card class="link-item">
+        <n-space style="width: 100%" align="center" justify="space-between">
+          <n-space align="center" justify="space-between">
+            <n-icon :size="28">
+              <component :is="navigate.icon" />
+            </n-icon>
+            <span>{{ navigate.name }}</span>
+          </n-space>
           <n-icon :size="28">
-            <component :is="navigate.icon" />
+            <IconChevronRight />
           </n-icon>
-          <span>{{ navigate.name }}</span>
         </n-space>
-        <n-icon :size="28">
-          <IconChevronRight />
-        </n-icon>
-      </n-space>
+      </p-card>
     </router-link>
 
-    <div @click="logoutHandler" class="link-item">
-      <n-space align="center" justify="space-between">
+    <p-card @click="logoutHandler" class="link-item">
+      <n-space style="width: 100%" align="center" justify="space-between">
         <n-space align="center" justify="space-between" class="logout">
           <n-icon :size="28">
             <IconLogout />
@@ -111,7 +112,7 @@ const logoutHandler = () => {
           <IconChevronRight />
         </n-icon>
       </n-space>
-    </div>
+    </p-card>
   </div>
 </template>
 
@@ -129,24 +130,13 @@ const logoutHandler = () => {
       font-size: 2rem;
     }
   }
-
-  .general {
-    color: $primary;
-    font-size: 2.2rem;
-    font-weight: bold;
-    margin-top: 2rem;
-  }
-
   .link-item {
-    display: block;
-    padding: 1rem 0;
+    width: 100%;
     margin: 1rem 0;
-    color: $dark;
     span {
       font-size: 1.8rem;
       font-weight: bold;
     }
-
     .logout {
       color: $pink;
     }
