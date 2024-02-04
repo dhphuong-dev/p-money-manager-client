@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormInst, FormItemRule } from 'naive-ui';
+import type { FormInst, FormRules } from 'naive-ui';
 
 import { passwordValidator, emaildValidator } from '@/utils/validator/index';
 import type { ILoginBody } from '@/types/auth.types';
@@ -15,7 +15,7 @@ const formInstRef = ref<FormInst | null>(null);
 const model = ref<ILoginBody>({ email: '', password: '' });
 const loading = ref<boolean>(false);
 
-const rules = {
+const rules: FormRules = {
   email: {
     required: true,
     validator: emaildValidator,
@@ -28,7 +28,7 @@ const rules = {
   }
 };
 
-const loginHandler = async () => {
+const loginHandler = async (): Promise<void> => {
   formInstRef.value?.validate(async (errors) => {
     if (!errors) {
       loading.value = true;

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { IconX } from '@tabler/icons-vue';
-
 import { createNewCategory } from '@/api/category';
 import { CategoryType, type CategoryRequest } from '@/types/category.type';
 

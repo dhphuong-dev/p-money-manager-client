@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormInst, FormItemRule } from 'naive-ui';
+import type { FormInst, FormRules } from 'naive-ui';
 
 import { emaildValidator } from '@/utils/validator/index';
 import { resetPassword } from '@/api/auth';
@@ -12,7 +12,7 @@ const model = ref({ email: '' });
 const loading = ref<boolean>(false);
 const message = useMessage();
 
-const rules = {
+const rules: FormRules = {
   email: {
     required: true,
     validator: emaildValidator,

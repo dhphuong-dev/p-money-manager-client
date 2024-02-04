@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { IconPlus, IconX } from '@tabler/icons-vue';
-
 import { getMyCategories } from '@/api/category';
 import { CategoryType, type CategoryResponse } from '@/types/category.type';
 import { getRandomColor } from '@/utils/random';

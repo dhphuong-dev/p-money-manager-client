@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { IconX } from '@tabler/icons-vue';
-
 import type { TransactionRequest } from '@/types/transaction.type';
 import { createNewTransaction } from '@/api/transaction';
 

@@ -1,14 +1,4 @@
 <script setup lang="ts">
-import {
-  IconX,
-  IconTrash,
-  IconEdit,
-  IconNotes,
-  IconCalendarEvent,
-  IconWallet,
-  IconMapPinCheck,
-  IconUsers
-} from '@tabler/icons-vue';
 import dayjs from 'dayjs';
 
 import type { TransactionRequest, TransactionResponse } from '@/types/transaction.type';

@@ -1,13 +1,4 @@
 <script setup lang="ts">
-import {
-  IconChevronLeft,
-  IconNotes,
-  IconCalendarEvent,
-  IconWallet,
-  IconMapPinCheck,
-  IconUsers,
-  IconCamera
-} from '@tabler/icons-vue';
 import type { SelectOption, FormRules, FormInst, UploadFileInfo } from 'naive-ui';
 import dayjs from 'dayjs';
 

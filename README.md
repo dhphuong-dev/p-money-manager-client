@@ -1,4 +1,6 @@
-# Vue 3 Boilerplate
+# pMoney Manager
+
+A web app use Vite + Vue
 
 ## Commands
 

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { IconX, IconCrown } from '@tabler/icons-vue';
-
 import { getMyAccount } from '@/api/user';
 import type { UserResponse } from '@/types/user.types';
 import { useAuthStore } from '@/stores/auth';

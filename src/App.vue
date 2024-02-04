@@ -21,7 +21,7 @@ const themeOverrides: GlobalThemeOverrides = {
     textColorBase: '#363853'
   },
   Form: {
-    labelTextColor: '#9e9e9f',
+    labelTextColor: '#363853',
     labelPaddingVertical: '1rem 0',
     labelFontWeight: 'bold'
   },

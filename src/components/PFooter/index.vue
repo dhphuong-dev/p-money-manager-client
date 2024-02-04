@@ -1,7 +1,3 @@
-<script lang="ts" setup>
-import { IconPlus, IconHome2, IconChartPie, IconWallet, IconUser } from '@tabler/icons-vue';
-</script>
-
 <template>
   <footer>
     <div class="flex">

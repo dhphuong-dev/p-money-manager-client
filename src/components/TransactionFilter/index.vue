@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 import type { FormInst, FormRules } from 'naive-ui';
-import { IconX } from '@tabler/icons-vue';
 
 import { useTransactionFilterStore } from '@/stores/TransactionFilter';
 import { TimeRange, ViewBy } from '@/constants';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { FormInst, FormItemRule } from 'naive-ui';
+import type { FormInst, FormItemRule, FormRules } from 'naive-ui';
 
 import {
   passwordValidator,
@@ -18,7 +18,7 @@ const loading = ref<boolean>(false);
 const message = useMessage();
 const { login, register } = useAuthStore();
 
-const rules = {
+const rules: FormRules = {
   fullName: {
     required: true,
     message: 'Please enter your full name',

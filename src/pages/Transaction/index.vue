@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { IconFilter, IconSearch } from '@tabler/icons-vue';
 
 import { getAllMyTransactions } from '@/api/transaction';
 import type { TransactionFilter, TransactionResponse } from '@/types/transaction.type';

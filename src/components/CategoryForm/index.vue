@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { IconCamera } from '@tabler/icons-vue';
 import type { UploadFileInfo, FormInst, FormRules } from 'naive-ui';
 
 import { createNewCategory } from '@/api/category';
@@ -10,7 +9,6 @@ const props = defineProps<{
   category: CategoryRequest;
 }>();
 const emit = defineEmits<{
-//   (e: 'update:category', category: CategoryRequest): void;
   (e: 'submit', category: CategoryRequest): void;
 }>();
 
@@ -35,8 +33,8 @@ const selectCategoryType = (event: Event) => {
   formValue.value.type = element.getAttribute('data-category-type') as CategoryType;
 };
 
-const saveCategoryHandler = async () => {
-  formRef.value?.validate(async (errors) => {
+const saveCategoryHandler = () => {
+  formRef.value?.validate((errors) => {
     if (!errors) {
       emit('submit', formValue.value);
     }

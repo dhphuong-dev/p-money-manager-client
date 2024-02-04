@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import logo from '@/assets/images/auth/logo.png';
+import logo from '@/assets/vite.svg';
 </script>
 
 <template>
@@ -7,7 +7,7 @@ import logo from '@/assets/images/auth/logo.png';
     <div class="auth-layout">
       <div class="auth-head">
         <div>
-          <img :src="logo" alt="pMoney Manager Logo" />
+          <img :src="logo" width="100" height="100" alt="pMoney Manager Logo" />
         </div>
         <h2>Best way to saving Your Money!</h2>
       </div>

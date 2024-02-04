@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { IconBellFilled } from '@tabler/icons-vue';
-
 import { getMyWallet } from '@/api/wallet';
 import type { WalletResponse } from '@/types/wallet.type';
 

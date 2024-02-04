@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { IconX, IconCalendarMonth } from '@tabler/icons-vue';
-
 import type { TransactionResponse } from '@/types/transaction.type';
 import { CategoryType } from '@/types/category.type';
 import { useTransFilterByView } from '@/composables/useTransFilterByView';

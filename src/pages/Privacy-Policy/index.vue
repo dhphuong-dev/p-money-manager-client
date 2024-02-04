@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { IconX } from '@tabler/icons-vue';
-
 const router = useRouter();
 const origin = location.origin;
 const AppName = 'pMoney Manager';

@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import { NButton } from 'naive-ui';
-</script>
-
 <template>
   <n-button
     :bordered="false"
@@ -17,6 +13,6 @@ import { NButton } from 'naive-ui';
     }"
     class="btn"
   >
-    <slot></slot>
+    <slot />
   </n-button>
 </template>
