@@ -28,7 +28,12 @@ export default defineConfig({
     }),
     Components({
       dirs: ['src/components'],
-      resolvers: [NaiveUiResolver()],
+      resolvers: [
+        NaiveUiResolver(),
+        (name) => {
+          if (name.match(/^(Icon[A-Z]|icon-[a-z])/)) return { name, from: '@tabler/icons-vue' };
+        }
+      ],
       dts: true
     }),
     AutoImport({

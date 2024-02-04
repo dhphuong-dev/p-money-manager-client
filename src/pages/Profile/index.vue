@@ -12,15 +12,13 @@ import {
 
 import { getMyAccount } from '@/api/user';
 import type { UserResponse } from '@/types/user.types';
-import { useAuthStore } from '@stores/auth';
 
 const router = useRouter();
 const message = useMessage();
-const { logout } = useAuthStore();
 
 const navigates = [
   {
-    route: 'Home',
+    route: 'User',
     name: 'My Account',
     icon: IconUser
   },
@@ -62,12 +60,6 @@ onBeforeMount(async () => {
 });
 
 const openSetting = () => {};
-
-const logoutHandler = () => {
-  logout();
-  message.success('Logout successful');
-  router.push({ name: 'Login' });
-};
 </script>
 
 <template>
@@ -99,20 +91,6 @@ const logoutHandler = () => {
         </n-space>
       </p-card>
     </router-link>
-
-    <p-card @click="logoutHandler" class="link-item">
-      <n-space style="width: 100%" align="center" justify="space-between">
-        <n-space align="center" justify="space-between" class="logout">
-          <n-icon :size="28">
-            <IconLogout />
-          </n-icon>
-          <span>Logout</span>
-        </n-space>
-        <n-icon :size="28">
-          <IconChevronRight />
-        </n-icon>
-      </n-space>
-    </p-card>
   </div>
 </template>
 
@@ -136,9 +114,6 @@ const logoutHandler = () => {
     span {
       font-size: 1.8rem;
       font-weight: bold;
-    }
-    .logout {
-      color: $pink;
     }
   }
 }

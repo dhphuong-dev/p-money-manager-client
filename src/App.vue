@@ -28,7 +28,7 @@ const themeOverrides: GlobalThemeOverrides = {
   Input: {
     border: 'none',
     borderRadius: '8px',
-    placeholderColor: '#363853'
+    placeholderColor: '#9e9e9f'
   },
   Button: {
     color: '#0012ff',
@@ -36,7 +36,8 @@ const themeOverrides: GlobalThemeOverrides = {
     colorHover: '#0012ff',
     colorPressed: '#0012ff',
     textColorHover: 'none',
-    textColorPressed: 'none'
+    textColorPressed: 'none',
+    colorDisabled: '#9e9e9f'
   }
 };
 
