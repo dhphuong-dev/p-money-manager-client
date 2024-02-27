@@ -47,7 +47,6 @@ watchEffect(() => {
 
 <style lang="scss">
 .report {
-  background-color: $bg-primary;
   .report-view {
     height: 90vh;
     overflow-y: scroll;

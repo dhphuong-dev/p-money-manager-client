@@ -4,10 +4,14 @@ import type { FormInst, FormRules } from 'naive-ui';
 
 import { getMyWallet, createNewWallet, editWalletName, deleteWalletById } from '@/api/wallet';
 import type { WalletResponse } from '@/types/wallet.type';
+import { useSettingStore } from '@/stores/settings';
+import { Theme } from '@/types/settings.type';
 
 const loadingBar = useLoadingBar();
 const message = useMessage();
 const dialog = useDialog();
+
+const settingsStore = useSettingStore();
 
 const myWallets = ref<WalletResponse[]>([]);
 const loadMyWallets = async () => {
@@ -144,7 +148,7 @@ const editWallet = () => {
 <template>
   <p-header class="container" title="My Wallet">
     <template #function>
-      <p
+      <n-p
         @click="
           () => {
             isAdd = true;
@@ -153,18 +157,18 @@ const editWallet = () => {
         "
       >
         Add
-      </p>
+      </n-p>
     </template>
   </p-header>
 
   <div id="wallet">
-    <div v-for="wallet in myWallets" :key="wallet.id" class="wallet-item">
+    <p-card v-for="wallet in myWallets" :key="wallet.id" class="wallet-item">
       <div class="wallet-img">
         <img width="50" height="50" src="@\assets\images\wallet.png" alt="" />
       </div>
 
       <div class="wallet-info">
-        <h3>{{ wallet.name }}</h3>
+        <n-h3>{{ wallet.name }}</n-h3>
         <span>{{ wallet.total }}$</span>
       </div>
 
@@ -177,35 +181,36 @@ const editWallet = () => {
           align="center"
           @click="wf.clickHandler(wallet)"
         >
-          <n-icon :size="28">
-            <component :is="wf.icon" />
-          </n-icon>
+          <n-p>
+            <component :is="wf.icon" :size="28" />
+          </n-p>
         </n-space>
       </div>
-    </div>
+    </p-card>
   </div>
 
   <n-drawer :show="isAdd || isEdit" placement="bottom" height="100%">
     <div class="container">
       <p-header v-if="isAdd" title="Add Wallet">
         <template #function>
-          <n-icon :size="28" @click="isAdd = false">
-            <icon-x />
-          </n-icon>
+          <n-p @click="isAdd = false">
+            <icon-x :size="28" />
+          </n-p>
         </template>
       </p-header>
       <p-header v-else-if="isEdit" title="Edit Wallet">
         <template #function>
-          <n-icon :size="28" @click="isEdit = false">
-            <icon-x />
-          </n-icon>
+          <n-p @click="isEdit = false">
+            <icon-x :size="28" />
+          </n-p>
         </template>
       </p-header>
-
+    </div>
+    <p-card style="margin-top: 2rem">
       <n-form ref="formInstRef" :model="walletFormValue" :rules="rules" class="wallet-form">
         <n-form-item path="name" :show-label="false">
           <div class="wallet-form-item">
-            <div class="wallet-form-item-img">
+            <div class="wallet-form-item-img" style="margin-right: 1rem">
               <img src="@\assets\images\wallet.png" width="50" height="50" alt="" />
             </div>
             <n-input
@@ -227,14 +232,13 @@ const editWallet = () => {
           Save
         </p-button>
       </n-form>
-    </div>
+    </p-card>
   </n-drawer>
 </template>
 
 <style scoped lang="scss">
 #wallet {
   margin: 2rem 0;
-  background-color: #ffffff;
   .wallet-item {
     padding: 2rem;
     display: flex;

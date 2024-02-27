@@ -24,10 +24,10 @@ onBeforeMount(loadAllCategories);
       <div class="transaction-title">
         <n-space justify="space-between" align="center">
           <div>
-            <p>{{ gr.dayOfweek }},</p>
-            <p>{{ gr.date }}</p>
+            <n-h6>{{ gr.dayOfweek }},</n-h6>
+            <n-h6>{{ gr.date }}</n-h6>
           </div>
-          <p class="total">{{ gr.total > 0 ? `+${gr.total}` : gr.total }}</p>
+          <n-p class="total">{{ gr.total > 0 ? `+${gr.total}` : gr.total }}</n-p>
         </n-space>
       </div>
 
@@ -43,9 +43,9 @@ onBeforeMount(loadAllCategories);
             <div class="img-wrapper">
               <img :src="category.imageUrl || ''" alt="Category image" />
             </div>
-            <p>{{ category.name }}</p>
+            <n-p>{{ category.name }}</n-p>
           </n-space>
-          <p class="total">{{ total > 0 ? `+${total}` : total }}</p>
+          <n-p class="total">{{ total > 0 ? `+${total}` : total }}</n-p>
         </n-space>
       </div>
 

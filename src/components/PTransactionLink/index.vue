@@ -31,7 +31,7 @@ onBeforeMount(async () => {
       </div>
       <div class="transaction-content">
         <n-space class="top" justify="space-between" :wrap="false">
-          <h3>{{ transaction.name }}</h3>
+          <n-h3>{{ transaction.name }}</n-h3>
           <h3 class="total" :class="{ negative: transaction.total > 0 }">
             {{ transaction.total > 0 ? `+$${transaction.total}` : `-$${-transaction.total}` }}
           </h3>

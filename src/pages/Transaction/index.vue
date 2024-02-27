@@ -6,9 +6,12 @@ import type { TransactionFilter, TransactionResponse } from '@/types/transaction
 import { TimeRange } from '@/constants';
 import { useTransactionFilterStore } from '@/stores/TransactionFilter';
 import { timelineGenerator, compare, type Timeline } from '@/utils/timeLine';
+import { useSettingStore } from '@/stores/settings';
+import { Theme } from '@/types/settings.type';
 
 const message = useMessage();
 const filterStore = useTransactionFilterStore();
+const settingsStore = useSettingStore();
 
 const showFilter = ref<boolean>(false);
 const openReport = ref<boolean>(false);
@@ -71,10 +74,10 @@ watchEffect(() => {
   <p-header class="container" title="My Transactions">
     <template #function>
       <n-space>
-        <n-icon :size="28"> <icon-search /> </n-icon>
-        <n-icon :size="28" @click="showFilter = true">
-          <icon-filter />
-        </n-icon>
+        <n-p> <icon-search :size="28" /> </n-p>
+        <n-p @click="showFilter = true">
+          <icon-filter :size="28" />
+        </n-p>
       </n-space>
     </template>
   </p-header>
@@ -98,7 +101,10 @@ watchEffect(() => {
       >
         <n-tab-pane v-for="({ label }, i) in timelines" :key="i" :name="i" :tab="label">
           <div class="transaction-view" v-if="transByTimeline.length">
-            <div class="transaction-overview">
+            <div
+              class="transaction-overview"
+              :class="{ dark: settingsStore.settings.theme === Theme.DARK }"
+            >
               <n-space class="line" justify="space-between">
                 <p>Income</p>
                 <p class="total">{{ total.income !== 0 ? `+${total.income}` : 0 }}</p>
@@ -150,9 +156,12 @@ watchEffect(() => {
     height: 70vh;
     overflow-y: scroll;
     .transaction-overview {
-      background-color: #ffffff;
+      background-color: $bg-white;
       padding: 2rem;
       margin-bottom: 1rem;
+      &.dark {
+        background-color: $dark;
+      }
       .line {
         margin-bottom: 1rem;
       }

@@ -114,52 +114,55 @@ const removeAvtUpload = () => {
       </template>
     </p-header>
 
-    <div class="container">
+    <div class="">
       <n-form class="user-updator-form" :model="formValue" :rules="rules" ref="formRef">
-        <div class="form-item-avatar">
-          <div>
-            <n-image
-              object-fit="cover"
-              class="avatar-img"
-              width="120"
-              height="120"
-              :src="previewAvtUrl"
-            />
-            <n-upload
-              :max="1"
-              :show-file-list="false"
-              accept="image/*"
-              v-model:file-list="formValue.avatar"
-              @change="previewAvtHandler"
-              class="open-avatar-changer"
-              v-if="formValue.avatar.length === 0"
-            >
-              <icon-camera :size="25" />
-            </n-upload>
-            <div v-else @click="removeAvtUpload" class="remove-avatar-upload">
-              <icon-x :size="28" />
+        <p-card style="margin: 2rem 0">
+          <div class="container" style="width: 100%; padding: 2rem 0">
+            <div class="form-item-avatar">
+              <div>
+                <n-image
+                  object-fit="cover"
+                  class="avatar-img"
+                  width="120"
+                  height="120"
+                  :src="previewAvtUrl"
+                />
+                <n-upload
+                  :max="1"
+                  :show-file-list="false"
+                  accept="image/*"
+                  v-model:file-list="formValue.avatar"
+                  @change="previewAvtHandler"
+                  class="open-avatar-changer"
+                  v-if="formValue.avatar.length === 0"
+                >
+                  <icon-camera :size="25" />
+                </n-upload>
+                <div v-else @click="removeAvtUpload" class="remove-avatar-upload">
+                  <icon-x :size="28" />
+                </div>
+              </div>
             </div>
+            <n-modal v-model:show="showAvatarUpload">
+              <p-card>Select avatar</p-card>
+            </n-modal>
+            <n-form-item label="Your email adderss" class="user-updator-form-item" path="email">
+              <n-input placeholder="Your email adderss" v-model:value="formValue.email" />
+            </n-form-item>
+            <n-form-item label="Your full name" class="user-updator-form-item" path="fullName">
+              <n-input placeholder="Your full name" v-model:value="formValue.fullName" />
+            </n-form-item>
+            <p-button
+              style="margin-top: 1rem"
+              :loading="loading"
+              :disabled="updateDisabled"
+              attr-type="submit"
+              @click="updateUserHandler"
+            >
+              Save
+            </p-button>
           </div>
-        </div>
-        <n-modal v-model:show="showAvatarUpload">
-          <p-card>Select avatar</p-card>
-        </n-modal>
-
-        <n-form-item label="Your email adderss" class="user-updator-form-item" path="email">
-          <n-input placeholder="Your email adderss" v-model:value="formValue.email" />
-        </n-form-item>
-        <n-form-item label="Your full name" class="user-updator-form-item" path="fullName">
-          <n-input placeholder="Your full name" v-model:value="formValue.fullName" />
-        </n-form-item>
-        <p-button
-          style="margin-top: 1rem"
-          :loading="loading"
-          :disabled="updateDisabled"
-          attr-type="submit"
-          @click="updateUserHandler"
-        >
-          Save
-        </p-button>
+        </p-card>
       </n-form>
     </div>
   </n-drawer>
@@ -167,7 +170,6 @@ const removeAvtUpload = () => {
 
 <style lang="scss">
 .user-updator {
-  background-color: $bg-primary;
   &-form {
     width: 100%;
     margin: 2rem 0;

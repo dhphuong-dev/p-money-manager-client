@@ -94,8 +94,8 @@ const registerHandler = () => {
     <p-button @click="registerHandler" :loading="loading" attr-type="submit">Register</p-button>
 
     <div class="footer">
-      <span>I'm ready a member. </span>
-      <router-link :to="{ name: 'Login', params: {} }" class="register-link">Login</router-link>
+      <n-text>I'm ready a member. </n-text>
+      <router-link :to="{ name: 'Login', params: {} }">Login</router-link>
     </div>
   </n-form>
 </template>
@@ -107,9 +107,6 @@ const registerHandler = () => {
   }
   .footer {
     text-align: center;
-    .register-link {
-      color: $primary;
-    }
   }
 }
 </style>

@@ -26,12 +26,12 @@ const option = computed<EChartsOption>(() => {
     props.type === CategoryType.INCOME ? cate.total > 0 : cate.total < 0
   );
   return {
-    title: {
-      text: `${props.type === CategoryType.INCOME ? 'Income' : 'Expense'}: $${transByType.reduce(
-        (pre, cur) => pre + cur.total,
-        0
-      )}`
-    },
+    // title: {
+    //   text: `${props.type === CategoryType.INCOME ? 'Income' : 'Expense'}: $${transByType.reduce(
+    //     (pre, cur) => pre + cur.total,
+    //     0
+    //   )}`
+    // },
     tooltip: {
       trigger: 'item',
       formatter: '{b} : ${c} ({d}%)'
@@ -54,7 +54,16 @@ const option = computed<EChartsOption>(() => {
 </script>
 
 <template>
-  <v-chart :style="{ height: props?.height || '30rem' }" :option="option" autoresize />
+  <div style="width: 100%">
+    <n-p>
+      {{ props.type === CategoryType.INCOME ? 'Income' : 'Expense' }}: ${{
+        props.transByCate
+          .filter((cate) => (props.type === CategoryType.INCOME ? cate.total > 0 : cate.total < 0))
+          .reduce((pre, cur) => pre + cur.total, 0)
+      }}
+    </n-p>
+    <v-chart :style="{ height: props?.height || '30rem' }" :option="option" autoresize />
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

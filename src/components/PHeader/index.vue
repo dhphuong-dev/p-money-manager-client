@@ -11,7 +11,7 @@ const props = defineProps<{
         <div class="header-back">
           <slot name="back" />
         </div>
-        <h2>{{ props.title }}</h2>
+        <n-h2>{{ props.title }}</n-h2>
       </n-space>
       <div class="header-function">
         <slot name="function" />

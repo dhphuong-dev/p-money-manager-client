@@ -72,27 +72,27 @@ const customTimeRangeHandler = () => {
 <template>
   <n-drawer v-model:show="_show" placement="bottom" height="20%">
     <div class="transaction-filter">
-      <p>Filter</p>
-      <p @click="showSelectTimeRangeOption">Select time range</p>
-      <p
+      <n-p>Filter</n-p>
+      <n-p @click="showSelectTimeRangeOption">Select time range</n-p>
+      <n-p
         v-if="filterStore.transactionFilter.viewBy === ViewBy.TRANSACTION"
         @click="changeTransactionView(ViewBy.CATEGORY)"
       >
         View by category
-      </p>
-      <p v-else @click="changeTransactionView(ViewBy.TRANSACTION)">View by transaction</p>
+      </n-p>
+      <n-p v-else @click="changeTransactionView(ViewBy.TRANSACTION)">View by transaction</n-p>
     </div>
   </n-drawer>
 
   <n-drawer v-model:show="showTimeRange" placement="bottom" height="45%">
     <div class="transaction-filter">
-      <p>Select time range</p>
-      <p @click="onSelectTimeRange(TimeRange.Day)">{{ TimeRange.Day }}</p>
-      <p @click="onSelectTimeRange(TimeRange.Week)">{{ TimeRange.Week }}</p>
-      <p @click="onSelectTimeRange(TimeRange.Month)">{{ TimeRange.Month }}</p>
-      <p @click="onSelectTimeRange(TimeRange.Year)">{{ TimeRange.Year }}</p>
-      <p @click="onSelectTimeRange(TimeRange.All)">{{ TimeRange.All }}</p>
-      <p
+      <n-p>Select time range</n-p>
+      <n-p @click="onSelectTimeRange(TimeRange.Day)">{{ TimeRange.Day }}</n-p>
+      <n-p @click="onSelectTimeRange(TimeRange.Week)">{{ TimeRange.Week }}</n-p>
+      <n-p @click="onSelectTimeRange(TimeRange.Month)">{{ TimeRange.Month }}</n-p>
+      <n-p @click="onSelectTimeRange(TimeRange.Year)">{{ TimeRange.Year }}</n-p>
+      <n-p @click="onSelectTimeRange(TimeRange.All)">{{ TimeRange.All }}</n-p>
+      <n-p
         @click="
           () => {
             showTimeRange = false;
@@ -101,27 +101,22 @@ const customTimeRangeHandler = () => {
         "
       >
         {{ TimeRange.Custom }}
-      </p>
+      </n-p>
     </div>
   </n-drawer>
 
   <n-drawer v-model:show="showCustomTimeRange" width="100%">
-    <div class="custom-time-range">
+    <p-header title="Custom" class="container">
+      <template #function>
+        <n-p @click="showCustomTimeRange = false">
+          <icon-x :size="28" />
+        </n-p>
+      </template>
+    </p-header>
+    <p-card class="custom-time-range">
       <div class="container">
-        <p-header title="Custom">
-          <template #function>
-            <n-icon :size="28" @click="showCustomTimeRange = false">
-              <icon-x />
-            </n-icon>
-          </template>
-        </p-header>
-
         <n-form class="custom-time-range-form" :rules="rules" :model="formValue" ref="formRef">
-          <n-form-item
-            label="STARTING DATE"
-            path="start"
-            :label-style="{ fontSize: '16px', color: '#363853' }"
-          >
+          <n-form-item label="STARTING DATE" path="start" :label-style="{ fontSize: '16px' }">
             <n-date-picker
               :bordered="false"
               size="large"
@@ -145,11 +140,7 @@ const customTimeRangeHandler = () => {
               v-model:value="formValue.start"
             />
           </n-form-item>
-          <n-form-item
-            label="END DATE"
-            path="end"
-            :label-style="{ fontSize: '16px', color: '#363853' }"
-          >
+          <n-form-item label="END DATE" path="end" :label-style="{ fontSize: '16px' }">
             <n-date-picker
               :bordered="false"
               size="large"
@@ -176,7 +167,7 @@ const customTimeRangeHandler = () => {
         </n-form>
         <p-button @click="customTimeRangeHandler" attr-type="submit">Done</p-button>
       </div>
-    </div>
+    </p-card>
   </n-drawer>
 </template>
 
@@ -206,10 +197,7 @@ const customTimeRangeHandler = () => {
   }
 }
 .custom-time-range {
-  background-color: $bg-primary;
-  height: 100%;
-  &-form {
-    margin: 2rem 0;
-  }
+  margin-top: 2rem;
+  padding: 2rem 0 !important;
 }
 </style>

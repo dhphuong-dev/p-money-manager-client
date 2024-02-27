@@ -28,9 +28,9 @@ const addNewTransaction = async (transaction: TransactionRequest) => {
 <template>
   <p-header title="New Transaction" class="container">
     <template #function>
-      <n-icon :size="28" @click="router.back">
-        <icon-x />
-      </n-icon>
+      <n-p @click="router.back">
+        <icon-x :size="28" />
+      </n-p>
     </template>
   </p-header>
 

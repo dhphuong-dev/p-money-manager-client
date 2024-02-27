@@ -8,6 +8,8 @@ import type { TransactionRequest } from '@/types/transaction.type';
 import { getMyWallet } from '@/api/wallet';
 import { getMyCategories, getCategoryById } from '@/api/category';
 import { isNumber } from '@/utils/is';
+import { useSettingStore } from '@/stores/settings';
+import { Theme } from '@/types/settings.type';
 
 const props = defineProps<{
   transaction?: TransactionRequest;
@@ -16,6 +18,8 @@ const emit = defineEmits<{
   (e: 'submit', transaction: TransactionRequest): void;
 }>();
 const message = useMessage();
+
+const settingsStore = useSettingStore();
 
 const isMoreDetails = ref<boolean>(
   !!props.transaction?.withPerson || !!props.transaction?.location
@@ -31,7 +35,7 @@ const formRef = ref<FormInst | null>(null);
 const formValue = reactive<TransactionRequest>(
   props.transaction || {
     name: '',
-    total: NaN,
+    total: 0,
     date: dayjs(timestamp.value).format('YYYY-MM-DD'),
     categoryId: '',
     walletId: ''
@@ -144,21 +148,29 @@ const saveTransaction = () => {
 
 <template>
   <n-form id="transaction-form" :rules="rules" :model="formValue" ref="formRef">
-    <div class="wrapper">
+    <div class="wrapper" :class="{ dark: settingsStore.settings.theme === Theme.DARK }">
       <n-form-item :show-label="false" path="total">
         <div class="form-item">
           <div class="label">
-            <div class="usd">USD</div>
+            <n-p class="usd" :class="{ dark: settingsStore.settings.theme === Theme.DARK }">
+              USD
+            </n-p>
           </div>
 
           <div class="input-wrapper">
-            <p>Total</p>
-            <input
-              type="number"
-              id="total"
-              min="0"
-              placeholder="0"
-              v-model.number="formValue.total"
+            <n-p>Total</n-p>
+            <n-input-number
+              :theme-overrides="{
+                peers: {
+                  Input: {
+                    borderRadius: '5px'
+                  }
+                }
+              }"
+              :bordered="false"
+              :min="0"
+              :show-button="false"
+              v-model:value="formValue.total"
             />
           </div>
         </div>
@@ -167,14 +179,14 @@ const saveTransaction = () => {
       <n-form-item :show-label="false" path="name">
         <div class="form-item">
           <div class="label">
-            <n-icon :size="24">
-              <icon-notes />
-            </n-icon>
+            <n-p>
+              <icon-notes :size="24" />
+            </n-p>
           </div>
           <div class="input-wrapper">
             <n-input
               :theme-overrides="{
-                paddingMedium: '0'
+                borderRadius: '5px'
               }"
               :bordered="false"
               placeholder="Name"
@@ -192,7 +204,7 @@ const saveTransaction = () => {
               alt=""
             />
           </div>
-          <p>{{ selectedCategory?.name || 'Select a category' }}</p>
+          <n-p style="padding-left: 12px">{{ selectedCategory?.name || 'Select a category' }}</n-p>
         </div>
 
         <categories-selector
@@ -205,9 +217,9 @@ const saveTransaction = () => {
       <n-form-item :show-label="false" path="date">
         <div class="form-item">
           <div class="label">
-            <n-icon :size="24">
-              <icon-calendar-event />
-            </n-icon>
+            <n-p>
+              <icon-calendar-event :size="24" />
+            </n-p>
           </div>
           <div class="input-wrapper">
             <n-date-picker
@@ -219,7 +231,7 @@ const saveTransaction = () => {
                     fontSizeTiny: '16px'
                   },
                   Input: {
-                    paddingMedium: '0',
+                    borderRadius: '5px',
                     fontSizeMedium: '16px'
                   }
                 },
@@ -236,9 +248,9 @@ const saveTransaction = () => {
       <n-form-item :show-label="false" path="wallet">
         <div class="form-item">
           <div class="label">
-            <n-icon :size="24">
-              <icon-wallet />
-            </n-icon>
+            <n-p>
+              <icon-wallet :size="24" />
+            </n-p>
           </div>
 
           <div class="input-wrapper" style="border: none">
@@ -247,7 +259,7 @@ const saveTransaction = () => {
               :theme-overrides="{
                 peers: {
                   InternalSelection: {
-                    paddingSingle: '0'
+                    borderRadius: '5px'
                   }
                 }
               }"
@@ -260,23 +272,27 @@ const saveTransaction = () => {
       </n-form-item>
     </div>
 
-    <div v-if="!isMoreDetails" class="wrapper">
-      <button class="more-details" @click="isMoreDetails = true">More Details</button>
+    <div
+      v-if="!isMoreDetails"
+      class="wrapper"
+      :class="{ dark: settingsStore.settings.theme === Theme.DARK }"
+    >
+      <n-p class="more-details" @click="isMoreDetails = true">More Details</n-p>
     </div>
 
     <div v-else>
-      <div class="wrapper">
+      <div class="wrapper" :class="{ dark: settingsStore.settings.theme === Theme.DARK }">
         <n-form-item :show-label="false" path="location">
           <div class="form-item">
             <div class="label">
-              <n-icon :size="24">
-                <icon-map-pin-check />
-              </n-icon>
+              <n-p>
+                <icon-map-pin-check :size="24" />
+              </n-p>
             </div>
             <div class="input-wrapper">
               <n-input
                 :theme-overrides="{
-                  paddingMedium: '0'
+                  borderRadius: '5px'
                 }"
                 :bordered="false"
                 id="location"
@@ -290,14 +306,14 @@ const saveTransaction = () => {
         <n-form-item :show-label="false" path="with-person">
           <div class="form-item">
             <div class="label">
-              <n-icon :size="24">
-                <icon-users />
-              </n-icon>
+              <n-p>
+                <icon-users :size="24" />
+              </n-p>
             </div>
             <div class="input-wrapper" style="border: none">
               <n-input
                 :theme-overrides="{
-                  paddingMedium: '0'
+                  borderRadius: '5px'
                 }"
                 :bordered="false"
                 id="with-person"
@@ -309,7 +325,10 @@ const saveTransaction = () => {
         </n-form-item>
       </div>
 
-      <div class="wrapper upload-photo">
+      <div
+        class="wrapper upload-photo"
+        :class="{ dark: settingsStore.settings.theme === Theme.DARK }"
+      >
         <n-form-item path="image" :show-feedback="false" :show-label="false">
           <n-upload
             :max="1"
@@ -343,11 +362,13 @@ const saveTransaction = () => {
 <style scoped lang="scss">
 #transaction-form {
   .wrapper {
-    background-color: white;
+    background-color: $bg-white;
     margin: 0 auto;
     padding: 2rem;
     margin: 2rem 0;
-
+    &.dark {
+      background-color: $dark;
+    }
     .form-item {
       display: flex;
       align-items: center;
@@ -357,7 +378,7 @@ const saveTransaction = () => {
         text-align: right;
       }
       .input-wrapper {
-        border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+        border-bottom: 1px solid $dark;
         flex: 1;
         margin-left: 2rem;
         input {
@@ -387,28 +408,24 @@ const saveTransaction = () => {
     }
   }
   .usd {
-    border: 2px solid black;
+    border: 2px solid $dark;
     border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
+    text-align: center;
+    padding: 0.6rem 0;
+    &.dark {
+      border: 2px solid $light;
+    }
   }
-
   .more-details {
-    background-color: #fff;
     color: $primary;
     font-weight: bold;
-    width: 100%;
     text-align: center;
   }
-
   .upload-photo {
     color: $primary;
     font-weight: bold;
     padding: 2rem;
   }
-
   .preview-transaction {
     margin-top: 2rem;
     height: 200px;

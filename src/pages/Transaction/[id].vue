@@ -118,100 +118,100 @@ const deleteTransaction = () => {
   <div v-if="!!transaction && !!category && !!wallet">
     <p-header class="container">
       <template #back>
-        <n-icon :size="24" style="display: block" @click="router.back">
-          <icon-x />
-        </n-icon>
+        <n-p style="display: block" @click="router.back">
+          <icon-x :size="28" />
+        </n-p>
       </template>
 
       <template #function>
         <n-space>
-          <n-icon :size="24" style="display: block" @click="isEdit = true">
-            <icon-edit />
-          </n-icon>
-          <n-icon :size="24" style="display: block" @click="deleteTransaction">
-            <icon-trash />
-          </n-icon>
+          <n-p style="display: block" @click="isEdit = true">
+            <icon-edit :size="28" />
+          </n-p>
+          <n-p style="display: block" @click="deleteTransaction">
+            <icon-trash :size="28" />
+          </n-p>
         </n-space>
       </template>
     </p-header>
 
     <div id="transaction-details">
-      <div class="section" v-if="!!transaction.imageUrl">
+      <p-card v-if="!!transaction.imageUrl">
         <div class="transaction-img">
           <n-image :src="transaction.imageUrl" />
         </div>
-      </div>
-      <div class="section">
+      </p-card>
+      <p-card class="section">
         <div class="line">
           <div class="label">
-            <div class="usd">USD</div>
+            <n-p class="usd">USD</n-p>
           </div>
           <div class="">
-            <p>Total</p>
-            <p class="total" :class="{ negative: transaction.total < 0 }">
+            <n-p>Total</n-p>
+            <n-p class="total" :class="{ negative: transaction.total < 0 }">
               {{ transaction.total }}
-            </p>
+            </n-p>
           </div>
         </div>
         <div class="line">
           <div class="label">
-            <n-icon :size="24">
-              <icon-notes />
-            </n-icon>
+            <n-p>
+              <icon-notes :size="28" />
+            </n-p>
           </div>
-          <p>{{ transaction.name }}</p>
+          <n-p>{{ transaction.name }}</n-p>
         </div>
         <div class="line">
           <div class="label category-img">
             <img :src="category.imageUrl || ''" alt="" />
           </div>
-          <p>{{ category.name }}</p>
+          <n-p>{{ category.name }}</n-p>
         </div>
         <div class="line">
           <div class="label">
-            <n-icon :size="24">
-              <icon-calendar-event />
-            </n-icon>
+            <n-p>
+              <icon-calendar-event :size="28" />
+            </n-p>
           </div>
-          <p>
+          <n-p>
             {{ dayjs(transaction.date).format('ddd, DD MMM YYYY') }}
-          </p>
+          </n-p>
         </div>
         <div class="line">
           <div class="label">
-            <n-icon :size="24">
-              <icon-wallet />
-            </n-icon>
+            <n-p>
+              <icon-wallet :size="28" />
+            </n-p>
           </div>
-          <p>{{ `${wallet.name}: $${wallet.total}` }}</p>
+          <n-p>{{ `${wallet.name}: $${wallet.total}` }}</n-p>
         </div>
-      </div>
-      <div class="section" v-if="!!transaction.location || !!transaction.withPerson">
+      </p-card>
+      <p-card class="section" v-if="!!transaction.location || !!transaction.withPerson">
         <div class="line" v-if="!!transaction.location">
           <div class="label">
-            <n-icon :size="24">
-              <icon-map-pin-check />
-            </n-icon>
+            <n-p>
+              <icon-map-pin-check :size="28" />
+            </n-p>
           </div>
-          <p>{{ transaction.location }}</p>
+          <n-p>{{ transaction.location }}</n-p>
         </div>
         <div class="line" v-if="!!transaction.withPerson">
           <div class="label">
-            <n-icon :size="24">
-              <icon-users />
-            </n-icon>
+            <n-p>
+              <icon-users :size="28" />
+            </n-p>
           </div>
-          <p>{{ transaction.withPerson }}</p>
+          <n-p>{{ transaction.withPerson }}</n-p>
         </div>
-      </div>
+      </p-card>
     </div>
 
-    <n-drawer :show="isEdit" placement="bottom" height="100%" class="edit-transaction">
+    <n-drawer :show="isEdit" placement="bottom" height="100%">
       <p-header class="container" title="Edit transaction">
         <template #function>
-          <n-icon :size="24" style="display: block" @click="isEdit = false">
-            <icon-x />
-          </n-icon>
+          <n-p style="display: block" @click="isEdit = false">
+            <icon-x :size="28" />
+          </n-p>
         </template>
       </p-header>
 
@@ -220,13 +220,16 @@ const deleteTransaction = () => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #transaction-details {
+  margin-top: 2rem;
   .section {
-    background-color: #ffffff;
     padding: 2rem;
     margin: 2rem 0;
     overflow: hidden;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
   }
   .line {
     display: flex;
@@ -237,7 +240,7 @@ const deleteTransaction = () => {
       width: 5rem;
       margin-right: 2rem;
       .usd {
-        border: 2px solid black;
+        border: 2px solid $dark;
         border-radius: 5px;
         display: flex;
         align-items: center;
@@ -269,9 +272,6 @@ const deleteTransaction = () => {
       object-fit: cover;
     }
   }
-}
-.edit-transaction {
-  background-color: $bg-primary;
 }
 </style>
 

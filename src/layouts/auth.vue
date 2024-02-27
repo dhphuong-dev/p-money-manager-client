@@ -9,7 +9,7 @@ import logo from '@/assets/vite.svg';
         <div>
           <img :src="logo" width="100" height="100" alt="pMoney Manager Logo" />
         </div>
-        <h2>Best way to saving Your Money!</h2>
+        <n-h2>Best way to saving Your Money!</n-h2>
       </div>
       <router-view />
     </div>
@@ -28,7 +28,6 @@ import logo from '@/assets/vite.svg';
     h2 {
       font-size: 2rem;
       line-height: 3.2rem;
-      color: $dark;
     }
   }
 }

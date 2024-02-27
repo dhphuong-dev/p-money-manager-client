@@ -22,14 +22,14 @@ onBeforeMount(async () => {
 <template>
   <p-header class="container" title="PMoney Manager">
     <template #function>
-      <icon-bell-filled />
+      <n-p><icon-bell-filled :size="28" /></n-p>
     </template>
   </p-header>
 
   <p-card class="wallet-card">
     <div class="wallet-view">
       <n-space justify="space-between" align="center" class="wallet-view-title">
-        <p>My Wallets</p>
+        <n-p>My Wallets</n-p>
         <router-link class="see-all" to="/wallet">See all</router-link>
       </n-space>
       <n-space
@@ -43,9 +43,9 @@ onBeforeMount(async () => {
           <div class="wallet-img">
             <img width="30" height="30" src="@\assets\images\wallet.png" alt="" />
           </div>
-          <p>{{ w.name }}</p>
+          <n-p>{{ w.name }}</n-p>
         </n-space>
-        <p>${{ w.total }}</p>
+        <n-p>${{ w.total }}</n-p>
       </n-space>
     </div>
   </p-card>

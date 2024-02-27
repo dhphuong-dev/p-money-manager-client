@@ -18,11 +18,6 @@ const categoriesFiltered = computed<CategoryResponse[]>(() =>
 );
 const showNewCategory = ref<boolean>(false);
 
-const selectCategoryType = (event: Event) => {
-  const element = event.target as HTMLElement;
-  cateTypeSelected.value = element.getAttribute('data-category-type') as CategoryType;
-};
-
 const reloadComponent = async (_show: boolean) => {
   showNewCategory.value = _show;
   loadingBar.start();
@@ -45,9 +40,9 @@ const reloadComponent = async (_show: boolean) => {
   <div class="categories container">
     <p-header title="My Category">
       <template #function>
-        <n-icon :size="28" @click="$router.back()">
-          <icon-x />
-        </n-icon>
+        <n-p @click="$router.back()">
+          <icon-x :size="28" />
+        </n-p>
       </template>
     </p-header>
 
@@ -57,10 +52,9 @@ const reloadComponent = async (_show: boolean) => {
           <p-card
             class="category-type"
             :class="{ selected: cateType === cateTypeSelected }"
-            :data-category-type="cateType"
-            @click="selectCategoryType"
+            @click="cateTypeSelected = cateType"
           >
-            {{ cateType }}
+            <n-p>{{ cateType }}</n-p>
           </p-card>
         </n-grid-item>
       </n-grid>
@@ -78,7 +72,7 @@ const reloadComponent = async (_show: boolean) => {
             <img v-if="!!cate.imageUrl" :src="cate.imageUrl" alt="" />
             <div v-else class="random-color" :style="{ backgroundColor: getRandomColor() }"></div>
           </div>
-          <p>{{ cate.name }}</p>
+          <n-p>{{ cate.name }}</n-p>
         </p-card>
       </div>
     </div>
@@ -89,11 +83,13 @@ const reloadComponent = async (_show: boolean) => {
 
 <style lang="scss">
 .categories {
-  background-color: $bg-primary;
   .category-type {
     font-size: 2rem;
     &.selected {
-      color: $primary;
+      p {
+        color: $primary !important;
+      }
+      border: 2px solid $primary;
     }
   }
   .category {
@@ -117,10 +113,6 @@ const reloadComponent = async (_show: boolean) => {
         height: 100%;
         border-radius: 50%;
       }
-    }
-    &.selected {
-      color: $primary;
-      border: 2px solid $primary;
     }
     &.add-new-category {
       color: $primary;

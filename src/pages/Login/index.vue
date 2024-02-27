@@ -66,16 +66,12 @@ const loginHandler = async (): Promise<void> => {
     <p-button @click="loginHandler" :loading="loading" attr-type="submit">Login</p-button>
 
     <div class="footer">
-      <router-link :to="{ name: 'ForgotPassword', params: {} }" class="footer-link"
-        >Forgot password ?</router-link
-      >
+      <router-link :to="{ name: 'ForgotPassword', params: {} }">Forgot password ?</router-link>
     </div>
 
     <div class="footer">
-      <span>Have not you an account ? </span>
-      <router-link :to="{ name: 'Register', params: {} }" class="footer-link"
-        >Register now.</router-link
-      >
+      <n-text>Have not you an account ? </n-text>
+      <router-link :to="{ name: 'Register', params: {} }"> Register now. </router-link>
     </div>
   </n-form>
 </template>
@@ -87,9 +83,6 @@ const loginHandler = async (): Promise<void> => {
   }
   .footer {
     text-align: center;
-    .footer-link {
-      color: $primary;
-    }
   }
 }
 </style>

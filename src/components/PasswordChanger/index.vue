@@ -95,60 +95,62 @@ const changePasswordHandler = () => {
       </template>
     </p-header>
 
-    <div class="container">
-      <n-form
-        class="password-changer-form"
-        :show-label="false"
-        :model="formValue"
-        :rules="rules"
-        ref="formRef"
-      >
-        <n-form-item class="password-changer-form-item" path="currentPassword">
-          <n-input
-            type="password"
-            show-password-on="click"
-            placeholder="Current password"
-            v-model:value="formValue.currentPassword"
-          />
-        </n-form-item>
-        <n-form-item class="password-changer-form-item" path="newPassword">
-          <n-input
-            type="password"
-            show-password-on="click"
-            placeholder="New password"
-            v-model:value="formValue.newPassword"
-          />
-        </n-form-item>
-        <n-form-item class="password-changer-form-item" path="confirmNewPassword">
-          <n-input
-            type="password"
-            show-password-on="click"
-            placeholder="Confirm password"
-            v-model:value="formValue.confirmNewPassword"
-          />
-        </n-form-item>
-        <p-button
-          :loading="loading"
-          style="margin: 1rem 0"
-          attr-type="submit"
-          @click="changePasswordHandler"
-        >
-          Save
-        </p-button>
-      </n-form>
+    <n-form
+      class="password-changer-form"
+      :show-label="false"
+      :model="formValue"
+      :rules="rules"
+      ref="formRef"
+    >
+      <p-card style="padding-top: 2rem">
+        <div class="container" style="width: 100%">
+          <n-form-item class="password-changer-form-item" path="currentPassword">
+            <n-input
+              type="password"
+              show-password-on="click"
+              placeholder="Current password"
+              v-model:value="formValue.currentPassword"
+            />
+          </n-form-item>
+          <n-form-item class="password-changer-form-item" path="newPassword">
+            <n-input
+              type="password"
+              show-password-on="click"
+              placeholder="New password"
+              v-model:value="formValue.newPassword"
+            />
+          </n-form-item>
+          <n-form-item class="password-changer-form-item" path="confirmNewPassword">
+            <n-input
+              type="password"
+              show-password-on="click"
+              placeholder="Confirm password"
+              v-model:value="formValue.confirmNewPassword"
+            />
+          </n-form-item>
 
-      <router-link to="/forgot-password">
-        <p-card>
-          <p class="fortgot-password">Forgot password?</p>
-        </p-card>
-      </router-link>
-    </div>
+          <p-button
+            :loading="loading"
+            style="margin: 1rem 0"
+            attr-type="submit"
+            @click="changePasswordHandler"
+          >
+            Save
+          </p-button>
+
+          <router-link to="/forgot-password">
+            <p-card>
+              <p class="fortgot-password">Forgot password?</p>
+            </p-card>
+          </router-link>
+        </div>
+      </p-card>
+    </n-form>
   </n-drawer>
 </template>
 
 <style lang="scss">
 .password-changer {
-  background-color: $bg-primary;
   .password-changer-form {
     width: 100%;
     margin: 2rem 0;

@@ -13,7 +13,7 @@
 
 a {
   text-decoration: none;
-  color: var.$dark;
+  color: var.$primary;
 }
 
 /**
@@ -41,6 +41,9 @@ body {
   font-size: 1.6rem;
   font-weight: bold;
   background-color: var.$bg-primary;
+}
+body.dark {
+  background-color: var.$bg-dark;
 }
 
 /**

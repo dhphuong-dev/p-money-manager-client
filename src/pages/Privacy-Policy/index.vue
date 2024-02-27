@@ -7,24 +7,25 @@ const AppName = 'pMoney Manager';
 <template>
   <p-header class="container" title="Privacy Policy">
     <template #function>
-      <n-icon :size="28" @click="router.back"> <icon-x /> </n-icon>
+      <n-p @click="router.back"> <icon-x :size="28" /> </n-p>
     </template>
   </p-header>
   <div class="privacy">
     <div class="container">
-      <p>
+      <n-p>
         This Privacy Policy governs the manner in which <span>{{ AppName }}</span> collects, uses,
         maintains and discloses information collected from users (each, a "User") of the
         <a :href="origin">{{ origin }}</a>
         website ("Site"). This privacy policy applies to the Site and all products and services
         offered by <span>{{ AppName }}</span
         >.
-      </p>
+      </n-p>
 
-      <h2>How we use collected information</h2>
-      <ul>
-        <span>{{ AppName }}</span>
-        may collect and use Users personal information for the following purposes:
+      <n-h2>How we use collected information</n-h2>
+      <n-ul>
+        <n-p>
+          {{ AppName }} may collect and use Users personal information for the following purposes:
+        </n-p>
         <li>
           <b>To improve customer service</b>: Information you provide helps us respond to your
           customer service requests and support needs more efficiently.
@@ -40,30 +41,30 @@ const AppName = 'pMoney Manager';
           information, etc. If at any time the User would like to unsubscribe from receiving future
           emails, they may do so by contacting us via our Site.
         </li>
-      </ul>
+      </n-ul>
 
-      <h2>How we protect your information</h2>
-      <p>
+      <n-h2>How we protect your information</n-h2>
+      <n-p>
         We adopt appropriate data collection, storage and processing practices and security measures
         to protect against unauthorized access, alteration, disclosure or destruction of your
         personal information, username, password, transaction information and data stored on our
         Site. Sensitive and private data exchange between the Site and its Users happens over a SSL
         secured communication channel and is encrypted and protected with digital signatures.
-      </p>
+      </n-p>
 
-      <h2>Your acceptance of these terms</h2>
-      <p>
+      <n-h2>Your acceptance of these terms</n-h2>
+      <n-p>
         By using this Site, you signify your acceptance of this policy. If you do not agree to this
         policy, please do not use our Site. Your continued use of the Site following the posting of
         changes to this policy will be deemed your acceptance of those changes.
-      </p>
+      </n-p>
 
-      <h2>Contacting us</h2>
-      <p>
+      <n-h2>Contacting us</n-h2>
+      <n-p>
         If you have any questions about this Privacy Policy, the practices of this site, or your
         dealings with this site, please contact us at:
         <a href="mailto:hoangphuong270703@gmail.com" type="email">hoangphuong270703@gmail.com</a>
-      </p>
+      </n-p>
     </div>
   </div>
 </template>

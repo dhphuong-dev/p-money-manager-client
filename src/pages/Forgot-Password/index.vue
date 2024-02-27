@@ -51,13 +51,13 @@ const loginHandler = async () => {
       <email-input v-model:value="model.email" />
     </n-form-item>
 
-    <p-button @click="loginHandler" :loading="loading" attr-type="submit"
-      >Send me a new password</p-button
-    >
+    <p-button @click="loginHandler" :loading="loading" attr-type="submit">
+      Send me a new password
+    </p-button>
 
     <div class="footer">
-      <span>Do you remember the password ? </span>
-      <router-link :to="{ name: 'Login', params: {} }" class="footer-link">Login now.</router-link>
+      <n-text>Do you remember the password ? </n-text>
+      <router-link :to="{ name: 'Login', params: {} }">Login now.</router-link>
     </div>
   </n-form>
 </template>
@@ -69,9 +69,6 @@ const loginHandler = async () => {
   }
   .footer {
     text-align: center;
-    .footer-link {
-      color: $primary;
-    }
   }
 }
 </style>

@@ -121,7 +121,6 @@ const reloadComponent = async (_show: boolean) => {
 
 <style lang="scss">
 .categories-selector {
-  background-color: $bg-primary;
   .category-type {
     font-size: 2rem;
     &.selected {

@@ -4,6 +4,11 @@ import type { UploadFileInfo, FormInst, FormRules } from 'naive-ui';
 import { createNewCategory } from '@/api/category';
 import { CategoryType, type CategoryRequest } from '@/types/category.type';
 import QuestionImg from '@/assets/images/categories/question-mark.png';
+import { ColorConstant } from '@/constants';
+import { useSettingStore } from '@/stores/settings';
+import { Theme } from '@/types/settings.type';
+
+const { settings } = useSettingStore();
 
 const props = defineProps<{
   category: CategoryRequest;
@@ -57,76 +62,79 @@ const previewCateImage = ({
 
 <template>
   <n-form class="category-form" ref="formRef" :model="formValue" :rules="rules">
-    <div class="wrapper">
-      <n-form-item :show-label="false" path="type">
-        <n-grid :cols="2" :x-gap="20">
-          <n-grid-item v-for="cateType in CategoryType" :key="cateType">
-            <p-card
-              class="category-type"
-              :class="{ selected: cateType === formValue.type }"
-              :data-category-type="cateType"
-              @click="selectCategoryType"
-            >
-              {{ cateType }}
-            </p-card>
-          </n-grid-item>
-        </n-grid>
-      </n-form-item>
+    <p-card>
+      <div class="wrapper" :class="{ dark: settings.theme == Theme.DARK }">
+        <n-form-item :show-label="false" path="type">
+          <n-grid :cols="2" :x-gap="20">
+            <n-grid-item v-for="cateType in CategoryType" :key="cateType">
+              <p-card
+                class="category-type"
+                :class="{ selected: cateType === formValue.type }"
+                :data-category-type="cateType"
+                @click="selectCategoryType"
+              >
+                {{ cateType }}
+              </p-card>
+            </n-grid-item>
+          </n-grid>
+        </n-form-item>
 
-      <n-form-item :show-label="false" path="name">
-        <div class="form-item">
-          <div class="category-img">
-            <img :src="previewImg ? previewImg : QuestionImg" alt="" />
-          </div>
-
-          <div class="input-wrapper">
-            <n-input
-              :theme-overrides="{
-                paddingMedium: '0'
-              }"
-              :bordered="false"
-              placeholder="Category name"
-              v-model:value="formValue.name"
-            />
-          </div>
-        </div>
-      </n-form-item>
-
-      <n-form-item :show-label="false" path="image">
-        <n-upload
-          :max="1"
-          directory-dnd
-          accept="image/*"
-          v-model:file-list="formValue.image"
-          @change="previewCateImage"
-        >
+        <n-form-item :show-label="false" path="name">
           <div class="form-item">
-            <n-icon :size="24">
-              <icon-camera />
-            </n-icon>
-            <p>Upload photo</p>
-          </div>
-        </n-upload>
-      </n-form-item>
+            <div class="category-img">
+              <img :src="previewImg ? previewImg : QuestionImg" alt="" />
+            </div>
 
-      <p-button @click="saveCategoryHandler">Save</p-button>
-    </div>
+            <div class="input-wrapper">
+              <n-input
+                :theme-overrides="{
+                  paddingMedium: '0 1rem 0 1rem'
+                }"
+                :bordered="false"
+                placeholder="Category name"
+                v-model:value="formValue.name"
+              />
+            </div>
+          </div>
+        </n-form-item>
+
+        <n-form-item :show-label="false" path="image">
+          <n-upload
+            :max="1"
+            directory-dnd
+            accept="image/*"
+            v-model:file-list="formValue.image"
+            @change="previewCateImage"
+          >
+            <div class="form-item">
+              <n-icon :size="24">
+                <icon-camera />
+              </n-icon>
+              <p>Upload photo</p>
+            </div>
+          </n-upload>
+        </n-form-item>
+
+        <p-button @click="saveCategoryHandler">Save</p-button>
+      </div>
+    </p-card>
   </n-form>
 </template>
 
 <style lang="scss">
 .category-form {
+  margin-top: 2rem;
   .category-type {
     font-size: 1.6rem;
+    background-color: $bg-dark !important;
     &.selected {
       color: $primary;
       border: 2px solid $primary;
     }
   }
   .wrapper {
-    background-color: white;
-    padding: 2rem;
-    margin: 2rem auto;
+    width: 100%;
+    padding: 2rem 0;
     .form-item {
       display: flex;
       align-items: center;

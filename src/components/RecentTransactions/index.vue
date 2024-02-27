@@ -26,7 +26,7 @@ onBeforeMount(async () => {
 <template>
   <div class="recent-transactions">
     <n-space justify="space-between" align="center" class="container" style="margin-bottom: 1rem">
-      <p>Recent transactions</p>
+      <n-p>Recent transactions</n-p>
       <router-link class="see-all" to="/transaction">See all</router-link>
     </n-space>
 

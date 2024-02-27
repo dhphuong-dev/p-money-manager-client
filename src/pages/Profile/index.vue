@@ -59,13 +59,13 @@ onBeforeMount(async () => {
   document.title = `${user.value?.fullName} - pMoney Manager`;
 });
 
-const openSetting = () => {};
+const openSettings = ref<boolean>(false);
 </script>
 
 <template>
   <p-header class="container" title="My Profile">
     <template #function>
-      <n-icon :size="28" @click="openSetting"> <icon-settings /> </n-icon>
+      <n-p @click="openSettings = true"> <icon-settings :size="28" /> </n-p>
     </template>
   </p-header>
 
@@ -80,18 +80,32 @@ const openSetting = () => {};
       <p-card class="link-item">
         <n-space style="width: 100%" align="center" justify="space-between">
           <n-space align="center" justify="space-between">
-            <n-icon :size="28">
-              <component :is="navigate.icon" />
-            </n-icon>
-            <span>{{ navigate.name }}</span>
+            <n-p>
+              <component :is="navigate.icon" :size="28" />
+            </n-p>
+            <n-text>{{ navigate.name }}</n-text>
           </n-space>
-          <n-icon :size="28">
-            <IconChevronRight />
-          </n-icon>
+          <n-p>
+            <IconChevronRight :size="28" />
+          </n-p>
         </n-space>
       </p-card>
     </router-link>
   </div>
+
+  <n-drawer v-model:show="openSettings" placement="bottom" height="100%">
+    <n-drawer-content :header-style="{ display: 'block' }">
+      <template #header>
+        <p-header class="container" title="Settings">
+          <template #function>
+            <n-p @click="openSettings = false"> <icon-x :size="28" /> </n-p>
+          </template>
+        </p-header>
+      </template>
+      <!-- <n-icon :size="28" @click="openSettings = false"> <icon-x /> </n-icon> -->
+      <p-settings />
+    </n-drawer-content>
+  </n-drawer>
 </template>
 
 <style scoped lang="scss">

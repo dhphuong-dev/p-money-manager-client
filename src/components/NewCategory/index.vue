@@ -58,21 +58,15 @@ const addNewCategoryHandler = async (payload: CategoryRequest) => {
 
 <template>
   <!-- New category -->
-  <n-drawer v-model:show="_show" width="100%" class="new-category">
+  <n-drawer v-model:show="_show" width="100%">
     <p-header class="container" title="Add new a Category">
       <template #function>
-        <n-icon :size="28" @click="_show = false">
-          <icon-x />
-        </n-icon>
+        <n-p @click="_show = false">
+          <icon-x :size="28" />
+        </n-p>
       </template>
     </p-header>
 
     <category-form v-model:category="category" @submit="addNewCategoryHandler" />
   </n-drawer>
 </template>
-
-<style lang="scss">
-.new-category {
-  background-color: $bg-primary;
-}
-</style>
